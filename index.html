@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
   <title>訂購管理</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
@@ -32,7 +32,10 @@
       justify-content: center;
       align-items: center;
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
     .card {
       width: calc(100% - 2 * var(--gap));
       max-width: 600px;
@@ -122,6 +125,7 @@
         box-shadow: none !important;
       }
     }
+
     @media (max-width: 360px) {
       :root { --gap: 10px; }
       h2 { font-size: 1.2rem; }
@@ -135,12 +139,24 @@
     <img src="./logo和勤.jpg" alt="和勤農產行 Logo" class="logo"/>
     <h2>和勤農產行 線上訂購</h2>
     <form id="orderForm">
-      <label>店家<input id="name" required placeholder="請輸入店家名稱"/></label>
-      <label>電話<input id="phone" required placeholder="請輸入聯絡電話"/></label>
-      <label>類別<select id="category" required></select></label>
-      <label>品項<select id="item" required></select></label>
-      <label>單價<input id="price" readonly/></label>
-      <label>數量<input id="qty" type="number" min="1" required/></label>
+      <label>店家
+        <input id="name" required placeholder="請輸入店家名稱"/>
+      </label>
+      <label>電話
+        <input id="phone" required placeholder="請輸入聯絡電話"/>
+      </label>
+      <label>類別
+        <select id="category" required></select>
+      </label>
+      <label>品項
+        <select id="item" required></select>
+      </label>
+      <label>單價
+        <input id="price" readonly/>
+      </label>
+      <label>數量
+        <input id="qty" type="number" min="1" required/>
+      </label>
       <button id="btn" class="submit-btn" type="submit">送出訂單</button>
     </form>
   </div>
@@ -148,20 +164,20 @@
   <script>
     const API = 'https://script.google.com/macros/s/AKfycbypXgBIFy_o_pN7tRd2oZrQSNLePFQFFaG6BOF_iW4OeDnNj7hL-XnWGRzReICVpNjC/exec';
 
-    // JSONP helper
+    // JSONP helper：動態插 <script>，自帶 callback
     function jsonp(url) {
       return new Promise((resolve, reject) => {
         const cb = 'cb_' + Date.now();
         window[cb] = data => {
           delete window[cb];
-          script.remove();
+          document.body.removeChild(script);
           resolve(data);
         };
         const script = document.createElement('script');
-        script.src    = url + `&callback=${cb}`;
+        script.src = url + `&callback=${cb}`;
         script.onerror = () => {
           delete window[cb];
-          script.remove();
+          document.body.removeChild(script);
           reject(new Error('JSONP load error'));
         };
         document.body.appendChild(script);
@@ -198,7 +214,7 @@
 
       form.addEventListener('submit', async e => {
         e.preventDefault();
-        btn.disabled    = true;
+        btn.disabled = true;
         btn.textContent = '送出中…';
 
         const params = new URLSearchParams({
@@ -216,7 +232,7 @@
         } catch (err) {
           alert('送出失敗：' + err.message);
         } finally {
-          btn.disabled    = false;
+          btn.disabled = false;
           btn.textContent = '送出訂單';
         }
       });
