@@ -21,12 +21,9 @@
     body{font-family:'Noto Sans TC',sans-serif;display:flex;justify-content:center;align-items:center;}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     .card{
-      width:calc(100% - 2*var(--gap));
-      max-width:600px;
-      margin:var(--gap) auto;
-      background:var(--card-bg);
-      border-radius:var(--radius);
-      padding:var(--gap);
+      width:calc(100% - 2*var(--gap));max-width:600px;
+      margin:var(--gap) auto;background:var(--card-bg);
+      border-radius:var(--radius);padding:var(--gap);
       box-shadow:0 4px 12px rgba(0,0,0,0.1);
       animation:fadeIn var(--transition);
       display:flex;flex-direction:column;
@@ -111,63 +108,76 @@
     function jsonp(url){
       return new Promise((resolve,reject)=>{
         const cb='cb_'+Date.now();
-        window[cb]=data=>{ delete window[cb]; document.body.removeChild(script); resolve(data); };
+        window[cb]=data=>{
+          delete window[cb];
+          document.body.removeChild(script);
+          resolve(data);
+        };
         const script=document.createElement('script');
         script.src=url+`&callback=${cb}`;
-        script.onerror=()=>{ delete window[cb]; document.body.removeChild(script); reject(new Error('JSONP load error')); };
+        script.onerror=()=>{
+          delete window[cb];
+          document.body.removeChild(script);
+          reject(new Error('JSONP load error'));
+        };
         document.body.appendChild(script);
       });
     }
 
+    let cacheItems = [];
+
+    // 載入所有分類
     async function loadCategories(){
-      const cats=await jsonp(`${API_URL}?action=getCategories`);
-      document.getElementById('category').innerHTML=
-        '<option disabled selected value="">請選擇類別</option>'
-        +cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+      const cats = await jsonp(`${API_URL}?action=getCategories`);
+      const sel = document.getElementById('category');
+      sel.innerHTML = '<option disabled selected value="">請選擇類別</option>'
+        + cats.map(c=>`<option value="${c}">${c}</option>`).join('');
     }
+
+    // 載入該分類所有品項與單價（一次呼叫）
     async function loadItems(cat){
-      const items=await jsonp(`${API_URL}?action=getItems&cat=${encodeURIComponent(cat)}`);
-      document.getElementById('item').innerHTML=
-        '<option disabled selected value="">請先選擇品項</option>'
-        +items.map(i=>`<option value="${i}">${i}</option>`).join('');
-      document.getElementById('price').value='';
+      cacheItems = await jsonp(`${API_URL}?action=getItemsWithPrice&cat=${encodeURIComponent(cat)}`);
+      const sel = document.getElementById('item');
+      sel.innerHTML = '<option disabled selected value="">請先選擇品項</option>'
+        + cacheItems.map(o=>`<option value="${o.item}">${o.item}</option>`).join('');
+      document.getElementById('price').value = '';
     }
-    async function loadPrice(item){
-      const p=await jsonp(`${API_URL}?action=getPrice&item=${encodeURIComponent(item)}`);
-      document.getElementById('price').value=p||'';
+
+    // 從前端快取中立即顯示單價
+    function showPrice(item){
+      const rec = cacheItems.find(o=>o.item===item);
+      document.getElementById('price').value = rec ? rec.price : '';
     }
 
     document.addEventListener('DOMContentLoaded',()=>{
-      const catSel=document.getElementById('category');
-      const itemSel=document.getElementById('item');
-      const form=document.getElementById('orderForm');
-      const btn=document.getElementById('btn');
+      const catSel = document.getElementById('category');
+      const itemSel= document.getElementById('item');
+      const form   = document.getElementById('orderForm');
+      const btn    = document.getElementById('btn');
 
       loadCategories();
-      catSel.addEventListener('change',e=>loadItems(e.target.value));
-      itemSel.addEventListener('change',e=>loadPrice(e.target.value));
+      catSel.addEventListener('change', e=> loadItems(e.target.value));
+      itemSel.addEventListener('change', e=> showPrice(e.target.value));
 
-      form.addEventListener('submit',async e=>{
+      form.addEventListener('submit', async e=>{
         e.preventDefault();
-        btn.disabled=true;
-        btn.textContent='送出中…';
-        const params=new URLSearchParams({
-          action:'submitOrder',
-          name:form.name.value.trim(),
-          phone:form.phone.value.trim(),
-          item:form.item.value,
-          qty:form.qty.value
+        btn.disabled=true; btn.textContent='送出中…';
+        const params = new URLSearchParams({
+          action: 'submitOrder',
+          name:   form.name.value.trim(),
+          phone:  form.phone.value.trim(),
+          item:   form.item.value,
+          qty:    form.qty.value
         });
-        try{
-          const { total }=await jsonp(`${API_URL}?${params}`);
+        try {
+          const { total } = await jsonp(`${API_URL}?${params}`);
           alert(`訂單送出成功！總金額：${total} 元`);
           form.reset();
           document.getElementById('price').value='';
-        }catch(err){
+        } catch(err) {
           alert('送出失敗：'+err.message);
-        }finally{
-          btn.disabled=false;
-          btn.textContent='送出訂單';
+        } finally {
+          btn.disabled=false; btn.textContent='送出訂單';
         }
       });
     });
