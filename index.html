@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>訂購管理</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
@@ -32,9 +32,7 @@
       justify-content: center;
       align-items: center;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; } to { opacity: 1; }
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .card {
       width: calc(100% - 2 * var(--gap));
       max-width: 600px;
@@ -124,6 +122,12 @@
         box-shadow: none !important;
       }
     }
+    @media (max-width: 360px) {
+      :root { --gap: 10px; }
+      h2 { font-size: 1.2rem; }
+      input, select { padding: 10px; font-size: 0.9rem; }
+      .submit-btn { padding: 12px; font-size: 1rem; }
+    }
   </style>
 </head>
 <body>
@@ -131,97 +135,88 @@
     <img src="./logo和勤.jpg" alt="和勤農產行 Logo" class="logo"/>
     <h2>和勤農產行 線上訂購</h2>
     <form id="orderForm">
-      <label>店家
-        <input id="name" type="text" required placeholder="請輸入店家名稱"/>
-      </label>
-      <label>電話
-        <input id="phone" type="tel" required placeholder="請輸入聯絡電話"/>
-      </label>
-      <label>類別
-        <select id="category" required>
-          <option value="">載入中…</option>
-        </select>
-      </label>
-      <label>品項
-        <select id="item" required>
-          <option value="">請先選擇</option>
-        </select>
-      </label>
-      <label>單價
-        <input id="price" type="text" readonly placeholder="選擇品項後自動帶入"/>
-      </label>
-      <label>數量
-        <input id="qty" type="number" min="1" required placeholder="請輸入數量"/>
-      </label>
+      <label>店家<input id="name" required placeholder="請輸入店家名稱"/></label>
+      <label>電話<input id="phone" required placeholder="請輸入聯絡電話"/></label>
+      <label>類別<select id="category" required></select></label>
+      <label>品項<select id="item" required></select></label>
+      <label>單價<input id="price" readonly/></label>
+      <label>數量<input id="qty" type="number" min="1" required/></label>
       <button id="btn" class="submit-btn" type="submit">送出訂單</button>
     </form>
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbypXgBIFy_o_pN7tRd2oZrQSNLePFQFFaG6BOF_iW4OeDnNj7hL-XnWGRzReICVpNjC/exec';
+    const API = 'https://script.google.com/macros/s/AKfycbypXgBIFy_o_pN7tRd2oZrQSNLePFQFFaG6BOF_iW4OeDnNj7hL-XnWGRzReICVpNjC/exec';
 
-    async function fetchJSON(url, opts) {
-      const res = await fetch(url, opts);
-      if (!res.ok) throw new Error(res.statusText);
-      return res.json();
+    // JSONP helper
+    function jsonp(url) {
+      return new Promise((resolve, reject) => {
+        const cb = 'cb_' + Date.now();
+        window[cb] = data => {
+          delete window[cb];
+          script.remove();
+          resolve(data);
+        };
+        const script = document.createElement('script');
+        script.src    = url + `&callback=${cb}`;
+        script.onerror = () => {
+          delete window[cb];
+          script.remove();
+          reject(new Error('JSONP load error'));
+        };
+        document.body.appendChild(script);
+      });
     }
 
     async function loadCategories() {
-      const cats = await fetchJSON(`${API_URL}?action=getCategories`);
+      const cats = await jsonp(`${API}?action=getCategories`);
       document.getElementById('category').innerHTML =
         '<option value="">請選擇類別</option>' +
         cats.map(c => `<option value="${c}">${c}</option>`).join('');
     }
-
     async function loadItems(cat) {
-      const items = await fetchJSON(`${API_URL}?action=getItems&cat=${encodeURIComponent(cat)}`);
+      const items = await jsonp(`${API}?action=getItems&cat=${encodeURIComponent(cat)}`);
       document.getElementById('item').innerHTML =
         '<option value="">請先選擇</option>' +
         items.map(i => `<option value="${i}">${i}</option>`).join('');
       document.getElementById('price').value = '';
     }
-
     async function loadPrice(item) {
-      const p = await fetchJSON(`${API_URL}?action=getPrice&item=${encodeURIComponent(item)}`);
+      const p = await jsonp(`${API}?action=getPrice&item=${encodeURIComponent(item)}`);
       document.getElementById('price').value = p || '';
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const catSel = document.getElementById('category');
+      const catSel  = document.getElementById('category');
       const itemSel = document.getElementById('item');
-      const form = document.getElementById('orderForm');
-      const btn = document.getElementById('btn');
+      const form    = document.getElementById('orderForm');
+      const btn     = document.getElementById('btn');
 
       loadCategories();
-
       catSel.addEventListener('change', e => loadItems(e.target.value));
       itemSel.addEventListener('change', e => loadPrice(e.target.value));
 
       form.addEventListener('submit', async e => {
         e.preventDefault();
-        btn.disabled = true;
+        btn.disabled    = true;
         btn.textContent = '送出中…';
 
-        const payload = {
-          name: document.getElementById('name').value.trim(),
-          phone: document.getElementById('phone').value.trim(),
-          item: document.getElementById('item').value,
-          qty: Number(document.getElementById('qty').value),
-        };
-
+        const params = new URLSearchParams({
+          action: 'submitOrder',
+          name:   form.name.value.trim(),
+          phone:  form.phone.value.trim(),
+          item:   form.item.value,
+          qty:    form.qty.value
+        });
         try {
-          const { total } = await fetchJSON(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
+          const { total } = await jsonp(`${API}?${params}`);
           alert(`訂單送出成功！總金額：${total} 元`);
           form.reset();
           document.getElementById('price').value = '';
         } catch (err) {
-          alert('送出失敗：' + err);
+          alert('送出失敗：' + err.message);
         } finally {
-          btn.disabled = false;
+          btn.disabled    = false;
           btn.textContent = '送出訂單';
         }
       });
