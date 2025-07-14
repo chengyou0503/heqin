@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>訂購管理</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #ff6b6b;
+      --primary-hover: #ff4757;
+      --bg: #f0f4f8;
+      --card-bg: #fff;
+      --radius: 8px;
+      --gap: 12px;
+      --transition: 0.3s;
+      --touch-height: 44px;
+    }
+    /* 全局重置 */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg);
+    }
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .card {
+      width: calc(100% - 2 * var(--gap));
+      max-width: 600px;
+      margin: var(--gap) auto;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: var(--gap);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      animation: fadeIn var(--transition);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-height: auto;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto var(--gap);
+      max-width: 120px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: var(--gap);
+      font-size: 1.4rem;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+    label {
+      display: flex;
+      flex-direction: column;
+      font-size: 1rem;
+    }
+    input, select {
+      margin-top: 8px;
+      padding: 12px;
+      font-size: 1rem;
+      min-height: var(--touch-height);
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      transition: border-color var(--transition);
+      width: 100%;
+    }
+    input:focus, select:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+    .submit-btn {
+      margin-top: var(--gap);
+      padding: 14px;
+      font-size: 1.1rem;
+      min-height: var(--touch-height);
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--transition);
+      width: 100%;
+    }
+    .submit-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    /* 手機版全螢幕強制撐滿 */
+    @media (max-width: 600px) {
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+      }
+      body {
+        display: block !important;
+      }
+      .card {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        margin: 0 !important;
+        max-width: none !important;
+        padding: var(--gap) !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        overflow-y: auto !important;
+      }
+    }
+
+    /* 超小螢幕微調 */
+    @media (max-width: 360px) {
+      :root { --gap: 10px; }
+      h2 { font-size: 1.2rem; }
+      input, select { padding: 10px; font-size: 0.9rem; }
+      .submit-btn { padding: 12px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img
+      src="https://lh3.googleusercontent.com/fife/ALs6j_HeOGE0mmzN-Zo9iufSISpQ-jd_ftOkZd9qet0v0zl09hGPrTZCNayO3dqYoGIx7SwL4yxgSTjm2iJxutFCAkGZXvGyh6n9SrGuC3k-8FowuGhVLtmmZ0EWMhdRg12Tzxv9cT3qa1ZUcZbiev1WPm5HNg9WxmBJNcrdpjvjVEpw_Bb9qz4mK2zaYRsJx9iputopQYuD95-Ueo9lbRIxYFPTegDJRfgVza7_6LFsaHL5oyHVzphlUVWWxqK_VZHsDx0SImZLoLf5NiTJVf45L7rOZeGk9hyHlX1brmlJCq4NAKhBv-CL7In87Li2aazaPxx5zwzOWSo0bRLDIFUsxjrki2OTacJICufT1y9_8theb8v3q_4eOAvvvMdb3kJ-TLTjWosN0JtFSmkokDSgaxlR1vitd1v2ThmlJX0ua-azhDBt40VXlCzfT2K-DEgF4BEQ1hfdsFIM_2ze9EqBDf6Lg06EDQ4yD5jF77o5xoWmS2QyD1lNzkppe2qADee8grsFlRig2yw_UbaLy5Z6xLwcHXcLhOZcIQG73Z7DQJ0Y0xzGxGvbGBUi27lXbGq7JDgiDA1q94Q3qOhdd49PCiHOumkg9mYbuGRBpPSGp81gKlfh4oyM9HiWeol7tWQx5hLH1tL2xAwPbX2Ju4McmyUYJLprRfaS5S9ZW0D3U89lZSTc2g4Xf5Vi46Zvj0FUUtYSKpNeiiRfzbN3Xl948V7ZWKHvUlmvER6gEutCQXo8rtkYfUDCl63Dd0GqeQwnOD5Pg0KeNNVInEG1XUGr5y02WsJJRfGuBQMflA2Oun3CnEsAXroycuE7eoVrtH8UKUX99IOu7_G9jCkbg9frviaM7X24QMbt1hGjLpi5PrArADR06_KcrpsRrzfe0z0qbWE4PqD3V7K8xhhxvwf2_TthRmcacUsI_Hri9e_BUdvaFZ-gvHrX337UY-cUx8BR_WwY2t5YOs6Gt-V2FTKb1NRNq1u9Uq17nVd0l-KnqkQjhj_iiFhfyl8hKWF0vorB9_frUgNAvYxEB83goaNGpXP71U0Pididvr1VBDI08A7f0skQ4-rWUoQcvmP9QVvP-h2CPMn50RBoGQrdPBC4yTVoCer1uAbv2AUeWOTW_FxP9Jv75K4z4z6WSPv2NUGwb4tFmCciL6V6wfCNQclFfUUupL0chcFPbdJH5ezzTSCXy0GnDxxw5qVnEQTWphrqL4Ao9mc65a5xEwKeJW_ZXVawJGHJ_vfPJXtzbVTWYolKkmOgNMxDbhJc-6uJeLJvU282LaOPOhzz_yfQp4O5ZLVmFraIuwId2fbgvvooEbSiGY5pMQLwW9ROwiVtYBP_56ih_N7fpzg7OC06kPwF4Etq_WBcqoB9FjH1VLkRS-a_Cp-ibsJ_ekGu_TWz5_4jMRb1JV-G2vmA1bz_dVlQylaPa5oeCSZDxBiqpR0EOztpI1ypUCmUCXmB6A1mG6_sMdtp956QAxJwcLsSU88d3lgYsZTKSdP4wzIAQ=s2048-w2048-h2048-n-k?authuser=0"
+      alt="Logo"
+      class="logo"
+    />
+    <h2>和勤農產行 線上訂購</h2>
+    <form id="orderForm" onsubmit="return onSubmit()">
+      <label>店家
+        <input id="name" type="text" required placeholder="請輸入店家名稱">
+      </label>
+      <label>電話
+        <input id="phone" type="tel" required placeholder="請輸入聯絡電話">
+      </label>
+      <label>類別
+        <select id="category" required>
+          <option disabled selected value="">請選擇類別</option>
+        </select>
+      </label>
+      <label>品項
+        <select id="item" required>
+          <option disabled selected value="">請先選擇品項</option>
+        </select>
+      </label>
+      <label>單價
+        <input id="price" type="text" readonly placeholder="選擇品項後自動帶入">
+      </label>
+      <label>數量
+        <input id="qty" type="number" min="1" required placeholder="請輸入數量">
+      </label>
+      <button id="btn" class="submit-btn" type="submit">送出訂單</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const catSel  = document.getElementById('category');
+      const itemSel = document.getElementById('item');
+      const priceEl = document.getElementById('price');
+
+      // 載入分類
+      google.script.run.withSuccessHandler(cats => {
+        catSel.innerHTML =
+          '<option disabled selected value="">請選擇類別</option>' +
+          cats.map(c => `<option value="${c}">${c}</option>`).join('');
+      }).getCategories();
+
+      catSel.addEventListener('change', updateItemOptions);
+      itemSel.addEventListener('change', () => {
+        const item = itemSel.value;
+        priceEl.value = '';
+        if (!item) return;
+        google.script.run.withSuccessHandler(p => {
+          priceEl.value = p;
+        }).getPrice(item);
+      });
+    });
+
+    function updateItemOptions() {
+      const cat    = document.getElementById('category').value;
+      const itemSel = document.getElementById('item');
+      const priceEl = document.getElementById('price');
+
+      itemSel.innerHTML = '<option disabled selected value="">請先選擇品項</option>';
+      priceEl.value     = '';
+
+      google.script.run.withSuccessHandler(items => {
+        items.forEach(i => {
+          const opt = document.createElement('option');
+          opt.value = i;
+          opt.text  = i;
+          itemSel.appendChild(opt);
+        });
+      }).getItemsByCategory(cat);
+    }
+
+    function onSubmit() {
+      const btn = document.getElementById('btn');
+      btn.disabled    = true;
+      btn.textContent = '送出中…';
+
+      const data = {
+        name:  document.getElementById('name').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        item:  document.getElementById('item').value,
+        qty:   parseInt(document.getElementById('qty').value, 10)
+      };
+
+      google.script.run
+        .withSuccessHandler(total => {
+          alert(`訂單送出成功！本筆訂單總金額：${total} 元`);
+          document.getElementById('orderForm').reset();
+          document.getElementById('price').value = '';
+        })
+        .withFailureHandler(err => {
+          alert(err.message);
+        })
+        .submitOrder(data);
+
+      btn.disabled    = false;
+      btn.textContent = '送出訂單';
+      return false;
+    }
+  </script>
+</body>
+</html>
