@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport"
-        content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+        content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>訂購管理</title>
   <link href="https://fonts.googleapis.com/css2?
         family=Noto+Sans+TC:wght@400;700&display=swap"
@@ -24,52 +24,39 @@
     body{font-family:'Noto Sans TC',sans-serif;
          display:flex;justify-content:center;align-items:center;}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    .card {
-      width:calc(100% - 2*var(--gap)); max-width:600px;
-      margin:var(--gap) auto;
-      background:var(--card-bg);
-      border-radius:var(--radius);
-      padding:var(--gap);
+    .card{width:calc(100% - 2*var(--gap)); max-width:600px;
+      margin:var(--gap) auto; background:var(--card-bg);
+      border-radius:var(--radius); padding:var(--gap);
       box-shadow:0 4px 12px rgba(0,0,0,0.1);
       animation:fadeIn var(--transition);
-      display:flex;flex-direction:column;
-      height:calc(100vh - 2*var(--gap));
-    }
+      display:flex; flex-direction:column;
+      height:calc(100vh - 2*var(--gap));}
     .logo{display:block;margin:0 auto var(--gap);max-width:120px;}
     h2{text-align:center;margin-bottom:var(--gap);font-size:1.4rem;}
-    form{flex:1;display:flex;flex-direction:column;
-         gap:var(--gap);overflow-y:auto;}
-    label{display:flex;flex-direction:column;font-size:1rem;}
-    input,select{
-      margin-top:8px;padding:12px;font-size:1rem;
+    form{flex:1; display:flex; flex-direction:column;
+         gap:var(--gap); overflow-y:auto;}
+    label{display:flex; flex-direction:column; font-size:1rem;}
+    input,select{margin-top:8px; padding:12px; font-size:1rem;
       min-height:var(--touch-height);
-      border:1px solid #ccc;border-radius:var(--radius);
-      transition:border-color var(--transition);
-      width:100%;
-    }
+      border:1px solid #ccc; border-radius:var(--radius);
+      transition:border-color var(--transition); width:100%;}
     input:focus,select:focus{border-color:var(--primary);outline:none;}
-    .submit-btn{
-      margin-top:auto;padding:14px;font-size:1.1rem;
+    .submit-btn{margin-top:auto; padding:14px; font-size:1.1rem;
       background:var(--primary);color:#fff;border:none;
       border-radius:var(--radius);cursor:pointer;
-      transition:background var(--transition);width:100%;
-    }
+      transition:background var(--transition);width:100%;}
     .submit-btn:hover{background:var(--primary-hover);}
     @media(max-width:600px){
       html,body{margin:0!important;padding:0!important;
                 width:100vw!important;height:100vh!important;}
       body{display:block!important;}
-      .card{
-        position:absolute!important;top:0!important;left:0!important;
-        width:100vw!important;height:100vh!important;
-        margin:0!important;max-width:none!important;
-        padding:var(--gap)!important;border-radius:0!important;
-        box-shadow:none!important;
-      }
+      .card{position:absolute!important;top:0!important;left:0!important;
+        width:100vw!important;height:100vh!important;margin:0!important;
+        max-width:none!important;padding:var(--gap)!important;
+        border-radius:0!important;box-shadow:none!important;}
     }
     @media(max-width:360px){
-      :root{--gap:10px;}
-      h2{font-size:1.2rem;}
+      :root{--gap:10px;}h2{font-size:1.2rem;}
       input,select{padding:10px;font-size:0.9rem;}
       .submit-btn{padding:12px;font-size:1rem;}
     }
@@ -89,14 +76,16 @@
                placeholder="請輸入聯絡電話"/>
       </label>
       <label>類別
-        <select id="category" required>
+        <select id="category" required
+                onchange="loadItems(this.value)">
           <option disabled selected value="">
             請選擇類別
           </option>
         </select>
       </label>
       <label>品項
-        <select id="item" required>
+        <select id="item" required
+                onchange="showPrice(this.value)">
           <option disabled selected value="">
             請先選擇品項
           </option>
@@ -119,30 +108,29 @@
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbypXgBIFy_o_pN7tRd2oZrQSNLePFQFFaG6BOF_iW4OeDnNj7hL-XnWGRzReICVpNjC/exec';
 
-    // JSONP helper：確保 script 節點會正確移除
     function jsonp(url){
       return new Promise((resolve,reject)=>{
-        const cb = 'cb_' + Date.now();
-        window[cb] = data=>{
+        const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+        window[cb] = data => {
           delete window[cb];
-          document.body.removeChild(script);
+          script.remove();
           resolve(data);
         };
         const script = document.createElement('script');
-        script.src = url + `&callback=${cb}`;
-        script.onerror = ()=>{
+        // 加上時間戳參數避免快取
+        script.src = `${url}&_=${Date.now()}&callback=${cb}`;
+        script.onerror = ()=> {
           delete window[cb];
-          document.body.removeChild(script);
+          script.remove();
           reject(new Error('JSONP load error'));
         };
-        document.body.appendChild(script);
+        document.head.appendChild(script);
       });
     }
 
-    // 快取該分類下的品項與價格
     let cacheItems = [];
 
-    // 1. 載入所有分類
+    // 載入分類
     async function loadCategories(){
       const cats = await jsonp(`${API_URL}?action=getCategories`);
       document.getElementById('category').innerHTML =
@@ -150,8 +138,9 @@
         cats.map(c=>`<option value="${c}">${c}</option>`).join('');
     }
 
-    // 2. 選類別後，一次拿該分類所有品項+價格
+    // 選類別後立刻載入品項+價格
     async function loadItems(cat){
+      if(!cat) return;
       cacheItems = await jsonp(`${API_URL}?action=getItemsWithPrice&cat=${encodeURIComponent(cat)}`);
       document.getElementById('item').innerHTML =
         '<option disabled selected value="">請先選擇品項</option>' +
@@ -159,33 +148,27 @@
       document.getElementById('price').value = '';
     }
 
-    // 3. 切換品項時，立即從快取顯示單價
+    // 選品項後立即顯示單價
     function showPrice(item){
       const rec = cacheItems.find(o=>o.item===item);
       document.getElementById('price').value = rec ? rec.price : '';
     }
 
     document.addEventListener('DOMContentLoaded',()=>{
-      const catSel  = document.getElementById('category');
-      const itemSel = document.getElementById('item');
-      const form    = document.getElementById('orderForm');
-      const btn     = document.getElementById('btn');
-
       loadCategories();
-      catSel .addEventListener('change', e=> loadItems(e.target.value));
-      itemSel.addEventListener('change', e=> showPrice(e.target.value));
 
-      form.addEventListener('submit',async e=>{
+      const form = document.getElementById('orderForm');
+      const btn  = document.getElementById('btn');
+      form.addEventListener('submit', async e=>{
         e.preventDefault();
-        btn.disabled = true;
+        btn.disabled    = true;
         btn.textContent = '送出中…';
-
         const params = new URLSearchParams({
-          action:'submitOrder',
-          name:  form.name.value.trim(),
-          phone: form.phone.value.trim(),
-          item:  form.item.value,
-          qty:   form.qty.value
+          action: 'submitOrder',
+          name:   form.name.value.trim(),
+          phone:  form.phone.value.trim(),
+          item:   form.item.value,
+          qty:    form.qty.value
         });
         try {
           const { total } = await jsonp(`${API_URL}?${params}`);
@@ -195,7 +178,7 @@
         } catch(err) {
           alert('送出失敗：' + err.message);
         } finally {
-          btn.disabled = false;
+          btn.disabled    = false;
           btn.textContent = '送出訂單';
         }
       });
