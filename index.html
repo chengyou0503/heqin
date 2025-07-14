@@ -2,71 +2,61 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover"/>
   <title>和勤農產行 線上訂購</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?
+        family=Noto+Sans+TC:wght@400;700&display=swap"
+        rel="stylesheet"/>
   <style>
     :root {
-      --primary: #ff6b6b;
-      --primary-hover: #ff4757;
-      --bg: #f0f4f8;
-      --card-bg: #fff;
-      --radius: 8px;
-      --gap: 12px;
-      --transition: 0.3s;
-      --touch-height: 44px;
+      --primary:#ff6b6b; --primary-hover:#ff4757;
+      --bg:#f0f4f8; --card-bg:#fff;
+      --radius:8px; --gap:12px;
+      --transition:.3s; --touch-height:44px;
     }
-    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-    html, body { width:100vw; height:100vh; background:var(--bg); }
-    body { font-family:'Noto Sans TC',sans-serif; display:flex; justify-content:center; align-items:center; }
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+    html,body { width:100vw; height:100vh; background:var(--bg) }
+    body { display:flex; justify-content:center; align-items:center;
+      font-family:'Noto Sans TC',sans-serif }
     @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-    .card {
-      width:calc(100% - 2*var(--gap));
-      max-width:600px;
-      margin:var(--gap) auto;
-      background:var(--card-bg);
-      border-radius:var(--radius);
-      padding:var(--gap);
-      box-shadow:0 4px 12px rgba(0,0,0,.1);
+    .card { width:calc(100% - 2*var(--gap));
+      max-width:600px; margin:var(--gap) auto;
+      background:var(--card-bg); border-radius:var(--radius);
+      padding:var(--gap); box-shadow:0 4px 12px rgba(0,0,0,.1);
       animation:fadeIn var(--transition);
       display:flex; flex-direction:column;
-      height:calc(100vh - 2*var(--gap));
-    }
-    .logo { display:block; margin:0 auto var(--gap); max-width:120px; }
-    h2 { text-align:center; margin-bottom:var(--gap); font-size:1.4rem; }
-    form { flex:1; display:flex; flex-direction:column; gap:var(--gap); overflow-y:auto; }
-    label { display:flex; flex-direction:column; font-size:1rem; }
-    input, select {
-      margin-top:8px; padding:12px; font-size:1rem;
-      min-height:var(--touch-height); border:1px solid #ccc;
-      border-radius:var(--radius); transition:border-color var(--transition);
-      width:100%;
-    }
-    input:focus, select:focus { border-color:var(--primary); outline:none; }
-    .submit-btn {
-      margin-top:auto; padding:14px; font-size:1.1rem;
-      background:var(--primary); color:#fff; border:none;
-      border-radius:var(--radius); cursor:pointer;
-      transition:background var(--transition); width:100%;
-    }
-    .submit-btn:hover { background:var(--primary-hover); }
+      height:calc(100vh - 2*var(--gap)); }
+    .logo { display:block; margin:0 auto var(--gap); max-width:120px }
+    h2 { text-align:center; margin-bottom:var(--gap); font-size:1.4rem }
+    form { flex:1; display:flex; flex-direction:column;
+      gap:var(--gap); overflow-y:auto }
+    label { display:flex; flex-direction:column; font-size:1rem }
+    input,select { margin-top:8px; padding:12px; font-size:1rem;
+      min-height:var(--touch-height);
+      border:1px solid #ccc; border-radius:var(--radius);
+      transition:border-color var(--transition); width:100% }
+    input:focus,select:focus { border-color:var(--primary); outline:none }
+    .submit-btn { margin-top:auto; padding:14px;
+      font-size:1.1rem; background:var(--primary); color:#fff;
+      border:none; border-radius:var(--radius); cursor:pointer;
+      transition:background var(--transition); width:100% }
+    .submit-btn:hover { background:var(--primary-hover) }
 
     @media(max-width:600px){
-      html,body { margin:0!important; padding:0!important; width:100vw!important; height:100vh!important; }
-      body { display:block!important; }
-      .card {
-        position:absolute!important; top:0!important; left:0!important;
+      html,body{margin:0!important;padding:0!important;
+        width:100vw!important;height:100vh!important}
+      body{display:block!important}
+      .card { position:absolute!important; top:0!important; left:0!important;
         width:100vw!important; height:100vh!important;
         margin:0!important; max-width:none!important;
         padding:var(--gap)!important; border-radius:0!important;
-        box-shadow:none!important;
-      }
+        box-shadow:none!important }
     }
     @media(max-width:360px){
-      :root { --gap:10px; }
-      h2 { font-size:1.2rem; }
-      input, select { padding:10px; font-size:.9rem; }
-      .submit-btn { padding:12px; font-size:1rem; }
+      :root{--gap:10px} h2{font-size:1.2rem}
+      input,select{padding:10px;font-size:.9rem}
+      .submit-btn{padding:12px;font-size:1rem}
     }
   </style>
 </head>
@@ -94,16 +84,15 @@
   </div>
 
   <script>
-    // ← 請改成你部署後的 exec URL
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwlivqNhL_XaIvXXjK54bskYkdfuYpeLSsF8d8JxjQfj-M-Tuo10V3M5oGBcEkRSOAdGg/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyHtcV9hd4nE9fqUlgw_KSuSqT1PaGv0HjOpYM3GgfuAVKc7UOgukem56B_GUsqGpI6hQ/exec';
 
     function jsonp(params) {
       return new Promise((resolve, reject) => {
-        const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+        const cb = 'cb_' + Date.now();
         window[cb] = data => {
-          resolve(data);
           delete window[cb];
           script.remove();
+          resolve(data);
         };
         const script = document.createElement('script');
         script.src = API_URL + '?' + new URLSearchParams({ ...params, callback: cb });
@@ -116,63 +105,59 @@
       });
     }
 
-    let cacheItems = [];
+    let cache = [];
 
-    // 1. 載入分類
     document.addEventListener('DOMContentLoaded', async () => {
       try {
-        const cats = await jsonp({ action: 'getCategories' });
+        const cats = await jsonp({ action:'getCategories' });
         document.getElementById('category').innerHTML =
           '<option disabled selected value="">請選擇類別</option>' +
-          cats.map(c => `<option value="${c}">${c}</option>`).join('');
-      } catch (e) {
+          cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+      } catch(e) {
         alert('載入分類失敗：' + e.message);
       }
     });
 
-    // 2. 載入品項＋單價
     async function loadItems(cat) {
-      if (!cat) return;
+      if(!cat) return;
       try {
-        cacheItems = await jsonp({ action: 'getItemsWithPrice', cat });
+        cache = await jsonp({ action:'getItemsWithPrice', cat });
         document.getElementById('item').innerHTML =
           '<option disabled selected value="">請先選擇品項</option>' +
-          cacheItems.map(o => `<option value="${o.item}">${o.item}</option>`).join('');
+          cache.map(o=>`<option value="${o.item}">${o.item}</option>`).join('');
         document.getElementById('price').value = '';
-      } catch (e) {
+      } catch(e) {
         alert('載入品項失敗：' + e.message);
       }
     }
 
-    // 3. 顯示單價
     function showPrice(item) {
-      const rec = cacheItems.find(o => o.item === item);
+      const rec = cache.find(o=>o.item===item);
       document.getElementById('price').value = rec ? rec.price : '';
     }
 
-    // 4. 送出訂單
-    document.getElementById('orderForm').addEventListener('submit', async e => {
+    document.getElementById('orderForm').addEventListener('submit', async e=>{
       e.preventDefault();
       const btn = document.getElementById('btn');
       btn.disabled = true;
       btn.textContent = '送出中…';
       try {
         const res = await jsonp({
-          action: 'submitOrder',
-          name: document.getElementById('name').value.trim(),
+          action:'submitOrder',
+          name:  document.getElementById('name').value.trim(),
           phone: document.getElementById('phone').value.trim(),
-          item: document.getElementById('item').value,
-          qty: document.getElementById('qty').value
+          item:  document.getElementById('item').value,
+          qty:   document.getElementById('qty').value
         });
-        if (res.error) throw new Error(res.error);
+        if(res.error) throw new Error(res.error);
         alert(`訂單送出成功！總金額：${res.total} 元`);
         e.target.reset();
-        document.getElementById('price').value = '';
-      } catch (err) {
-        alert('送出失敗：' + err.message);
+        document.getElementById('price').value='';
+      } catch(err) {
+        alert('送出失敗：'+err.message);
       } finally {
-        btn.disabled = false;
-        btn.textContent = '送出訂單';
+        btn.disabled=false;
+        btn.textContent='送出訂單';
       }
     });
   </script>
