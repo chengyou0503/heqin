@@ -5,10 +5,10 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1, viewport-fit=cover"/>
   <title>和勤農產行 線上訂購</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap"
+  <link href="https://fonts.googleapis.com/css2?
+        family=Noto+Sans+TC:wght@400;700&display=swap"
         rel="stylesheet"/>
   <style>
-    /* —— RWD + 全螢幕 CSS —— */
     :root {
       --primary: #ff6b6b;
       --primary-hover: #ff4757;
@@ -16,100 +16,57 @@
       --card-bg: #fff;
       --radius: 8px;
       --gap: 12px;
-      --transition: 0.3s;
+      --transition: .3s;
       --touch-height: 44px;
     }
-    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0 }
-    html, body { width:100vw; height:100vh; background:var(--bg) }
-    body { font-family:'Noto Sans TC',sans-serif;
-      display:flex; justify-content:center; align-items:center }
-    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-    .card {
-      width:calc(100% - 2*var(--gap));
-      max-width:600px;
-      margin:var(--gap) auto;
-      background:var(--card-bg);
-      border-radius:var(--radius);
-      padding:var(--gap);
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{width:100vw;height:100vh;background:var(--bg)}
+    body{font-family:'Noto Sans TC',sans-serif;
+      display:flex;justify-content:center;align-items:center}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .card{width:calc(100% - 2*var(--gap));max-width:600px;
+      margin:var(--gap) auto;background:var(--card-bg);
+      border-radius:var(--radius);padding:var(--gap);
       box-shadow:0 4px 12px rgba(0,0,0,.1);
       animation:fadeIn var(--transition);
-      display:flex; flex-direction:column;
-      height:calc(100vh - 2*var(--gap));
-    }
-    .logo {
-      display:block;
-      margin:0 auto var(--gap);
-      max-width:120px;
-    }
-    h2 {
-      text-align:center;
-      margin-bottom:var(--gap);
-      font-size:1.4rem;
-    }
-    form {
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      gap:var(--gap);
-      overflow-y:auto;
-    }
-    label {
-      display:flex;
-      flex-direction:column;
-      font-size:1rem;
-    }
-    input, select {
-      margin-top:8px;
-      padding:12px;
-      font-size:1rem;
-      min-height:var(--touch-height);
-      border:1px solid #ccc;
-      border-radius:var(--radius);
-      transition:border-color var(--transition);
-      width:100%;
-    }
-    input:focus, select:focus {
-      outline:none;
-      border-color:var(--primary);
-    }
-    .submit-btn {
-      margin-top:auto;
-      padding:14px;
-      font-size:1.1rem;
-      background:var(--primary);
-      color:#fff;
-      border:none;
-      border-radius:var(--radius);
-      cursor:pointer;
-      transition:background var(--transition);
-      width:100%;
-    }
-    .submit-btn:hover {
-      background:var(--primary-hover);
-    }
+      display:flex;flex-direction:column;
+      height:calc(100vh - 2*var(--gap))}
+    .logo{display:block;margin:0 auto var(--gap);max-width:120px}
+    h2{text-align:center;margin-bottom:var(--gap);font-size:1.4rem}
+    form{flex:1;display:flex;flex-direction:column;
+      gap:var(--gap);overflow-y:auto}
+    label{display:flex;flex-direction:column;font-size:1rem}
+    input,select{margin-top:8px;padding:12px;font-size:1rem;
+      min-height:var(--touch-height);border:1px solid #ccc;
+      border-radius:var(--radius);transition:border-color var(--transition);
+      width:100%}
+    input:focus,select:focus{outline:none;border-color:var(--primary)}
+    .submit-btn{margin-top:auto;padding:14px;font-size:1.1rem;
+      background:var(--primary);color:#fff;border:none;
+      border-radius:var(--radius);cursor:pointer;
+      transition:background var(--transition);width:100%}
+    .submit-btn:hover{background:var(--primary-hover)}
     @media(max-width:600px){
-      html,body{margin:0!important;padding:0!important;width:100vw!important;height:100vh!important;}
-      body{display:block!important;}
-      .card {
-        position:absolute!important; top:0!important; left:0!important;
-        width:100vw!important; height:100vh!important;
-        margin:0!important; max-width:none!important;
-        padding:var(--gap)!important; border-radius:0!important;
-        box-shadow:none!important;
-      }
+      html,body{margin:0!important;padding:0!important;
+        width:100vw!important;height:100vh!important}
+      body{display:block!important}
+      .card{position:absolute!important;top:0!important;left:0!important;
+        width:100vw!important;height:100vh!important;
+        margin:0!important;max-width:none!important;
+        padding:var(--gap)!important;border-radius:0!important;
+        box-shadow:none!important}
     }
     @media(max-width:360px){
-      :root{--gap:10px;}
-      h2{font-size:1.2rem;}
-      input,select{padding:10px;font-size:.9rem;}
-      .submit-btn{padding:12px;font-size:1rem;}
+      :root{--gap:10px}h2{font-size:1.2rem}
+      input,select{padding:10px;font-size:.9rem}
+      .submit-btn{padding:12px;font-size:1rem}
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <!-- logo和勤.jpg 放在此 repo 根目錄 -->
-    <img src="./logo和勤.jpg" alt="和勤農產行 Logo" class="logo"/>
+    <!-- 放在 repo 根目錄的 logo -->
+    <img src="./logo和勤.jpg" alt="Logo" class="logo"/>
     <h2>和勤農產行 線上訂購</h2>
     <form id="orderForm">
       <label>店家<input id="name" required placeholder="請輸入店家名稱"/></label>
@@ -131,71 +88,65 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbypXgBIFy_o_pN7tRd2oZrQSNLePFQFFaG6BOF_iW4OeDnNj7hL-XnWGRzReICVpNjC/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbw3lKY-YEo0ACfh5bAJ_-_bGXYxEj8CkM3okl4kU1OSltF-SbOzPOItbDOk-VXSkzdmEQ/exec';
 
-    // 一個簡單的 fetch 包裝
-    async function callAPI(params) {
+    async function api(params) {
       const url = API_URL + '?' + new URLSearchParams(params);
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
-      return res.json();
+      const r   = await fetch(url);
+      if (!r.ok) throw new Error(r.status + ' ' + r.statusText);
+      return r.json();
     }
 
-    let _cacheItems = [];
+    let cacheItems = [];
 
-    // 1. DOMContentLoaded 立刻載入分類
     document.addEventListener('DOMContentLoaded', async () => {
       try {
-        const cats = await callAPI({ action:'getCategories' });
+        const cats = await api({ action:'getCategories' });
         document.getElementById('category').innerHTML =
           '<option disabled selected value="">請選擇類別</option>' +
           cats.map(c=>`<option value="${c}">${c}</option>`).join('');
-      } catch (e) {
-        alert('載入分類失敗：' + e.message);
+      } catch(e) {
+        alert('載入分類失敗：'+e.message);
       }
     });
 
-    // 2. 選類別後載入品項並快取
     async function loadItems(cat) {
       if (!cat) return;
       try {
-        _cacheItems = await callAPI({ action:'getItemsWithPrice', cat });
+        cacheItems = await api({ action:'getItemsWithPrice', cat });
         document.getElementById('item').innerHTML =
           '<option disabled selected value="">請先選擇品項</option>' +
-          _cacheItems.map(o=>`<option value="${o.item}">${o.item}</option>`).join('');
+          cacheItems.map(o=>`<option value="${o.item}">${o.item}</option>`).join('');
         document.getElementById('price').value = '';
-      } catch (e) {
-        alert('載入品項失敗：' + e.message);
+      } catch(e) {
+        alert('載入品項失敗：'+e.message);
       }
     }
 
-    // 3. 顯示快取中的單價
     function showPrice(item) {
-      const rec = _cacheItems.find(o=>o.item===item);
-      document.getElementById('price').value = rec ? rec.price : '';
+      const rec = cacheItems.find(o=>o.item===item);
+      document.getElementById('price').value = rec?rec.price:'';
     }
 
-    // 4. 表單送出
     document.getElementById('orderForm').addEventListener('submit', async e => {
       e.preventDefault();
       const btn = document.getElementById('btn');
-      btn.disabled = true;
+      btn.disabled    = true;
       btn.textContent = '送出中…';
-
       try {
-        const res = await callAPI({
-          action: 'submitOrder',
-          name:   e.target.name.value.trim(),
-          phone:  e.target.phone.value.trim(),
-          item:   e.target.item.value,
-          qty:    e.target.qty.value
+        const res = await api({
+          action:'submitOrder',
+          name:  e.target.name.value.trim(),
+          phone: e.target.phone.value.trim(),
+          item:  e.target.item.value,
+          qty:   e.target.qty.value
         });
         if (res.error) throw new Error(res.error);
         alert(`訂單送出成功！總金額：${res.total} 元`);
         e.target.reset();
-        document.getElementById('price').value = '';
-      } catch (err) {
-        alert('送出失敗：' + err.message);
+        document.getElementById('price').value='';
+      } catch(err) {
+        alert('送出失敗：'+err.message);
       } finally {
         btn.disabled    = false;
         btn.textContent = '送出訂單';
