@@ -9,65 +9,50 @@
         family=Noto+Sans+TC:wght@400;700&display=swap"
         rel="stylesheet"/>
   <style>
-    /* —— RWD + 全螢幕 CSS —— */
-    :root {
-      --primary: #ff6b6b; --primary-hover: #ff4757;
-      --bg: #f0f4f8; --card-bg: #fff;
-      --radius: 8px; --gap: 12px; --transition: .3s;
-      --touch-height: 44px;
-    }
-    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0}
-    html, body { width:100vw; height:100vh; background:var(--bg) }
-    body { font-family:'Noto Sans TC',sans-serif;
-      display:flex;justify-content:center;align-items:center}
+    /* RWD + 全螢幕 CSS 同上 */ 
+    :root{--primary:#ff6b6b;--primary-hover:#ff4757;--bg:#f0f4f8;
+      --card-bg:#fff;--radius:8px;--gap:12px;--transition:.3s;
+      --touch-height:44px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{width:100vw;height:100vh;background:var(--bg);}
+    body{font-family:'Noto Sans TC',sans-serif;
+      display:flex;justify-content:center;align-items:center;}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    .card {
-      width:calc(100% - 2*var(--gap));max-width:600px;
+    .card{width:calc(100% - 2*var(--gap));max-width:600px;
       margin:var(--gap) auto;background:var(--card-bg);
       border-radius:var(--radius);padding:var(--gap);
       box-shadow:0 4px 12px rgba(0,0,0,.1);
       animation:fadeIn var(--transition);
       display:flex;flex-direction:column;
-      height:calc(100vh - 2*var(--gap));
-    }
-    .logo { display:block;margin:0 auto var(--gap);max-width:120px }
-    h2 { text-align:center;margin-bottom:var(--gap);font-size:1.4rem }
-    form {
-      flex:1;display:flex;flex-direction:column;
-      gap:var(--gap);overflow-y:auto;
-    }
-    label { display:flex;flex-direction:column;font-size:1rem }
-    input, select {
-      margin-top:8px;padding:12px;font-size:1rem;
-      min-height:var(--touch-height);
-      border:1px solid #ccc;border-radius:var(--radius);
-      transition:border-color var(--transition);
-      width:100%;
-    }
-    input:focus, select:focus {
-      outline:none;border-color:var(--primary)
-    }
-    .submit-btn {
-      margin-top:auto;padding:14px;font-size:1.1rem;
+      height:calc(100vh - 2*var(--gap));}
+    .logo{display:block;margin:0 auto var(--gap);max-width:120px;}
+    h2{text-align:center;margin-bottom:var(--gap);font-size:1.4rem;}
+    form{flex:1;display:flex;flex-direction:column;
+      gap:var(--gap);overflow-y:auto;}
+    label{display:flex;flex-direction:column;font-size:1rem;}
+    input,select{margin-top:8px;padding:12px;font-size:1rem;
+      min-height:var(--touch-height);border:1px solid #ccc;
+      border-radius:var(--radius);
+      transition:border-color var(--transition);width:100%;}
+    input:focus,select:focus{outline:none;border-color:var(--primary);}
+    .submit-btn{margin-top:auto;padding:14px;font-size:1.1rem;
       background:var(--primary);color:#fff;border:none;
       border-radius:var(--radius);cursor:pointer;
-      transition:background var(--transition);width:100%;
-    }
-    .submit-btn:hover { background:var(--primary-hover) }
+      transition:background var(--transition);width:100%;}
+    .submit-btn:hover{background:var(--primary-hover);}
     @media(max-width:600px){
       html,body{margin:0!important;padding:0!important;
-        width:100vw!important;height:100vh!important}
-      body{display:block!important}
+        width:100vw!important;height:100vh!important;}
+      body{display:block!important;}
       .card{position:absolute!important;top:0!important;left:0!important;
-        width:100vw!important;height:100vh!important;
-        margin:0!important;max-width:none!important;
-        padding:var(--gap)!important;border-radius:0!important;
-        box-shadow:none!important}
+        width:100vw!important;height:100vh!important;margin:0!important;
+        max-width:none!important;padding:var(--gap)!important;
+        border-radius:0!important;box-shadow:none!important;}
     }
     @media(max-width:360px){
-      :root{--gap:10px}h2{font-size:1.2rem}
-      input,select{padding:10px;font-size:.9rem}
-      .submit-btn{padding:12px;font-size:1rem}
+      :root{--gap:10px;}h2{font-size:1.2rem;}
+      input,select{padding:10px;font-size:.9rem;}
+      .submit-btn{padding:12px;font-size:1rem;}
     }
   </style>
 </head>
@@ -76,12 +61,8 @@
     <img src="./logo和勤.jpg" alt="Logo" class="logo"/>
     <h2>和勤農產行 線上訂購</h2>
     <form id="orderForm">
-      <label>店家
-        <input id="name" required placeholder="請輸入店家名稱"/>
-      </label>
-      <label>電話
-        <input id="phone" required placeholder="請輸入聯絡電話"/>
-      </label>
+      <label>店家<input id="name" required placeholder="請輸入店家名稱"/></label>
+      <label>電話<input id="phone" required placeholder="請輸入聯絡電話"/></label>
       <label>類別
         <select id="category" required onchange="loadItems(this.value)">
           <option disabled selected value="">請選擇類別</option>
@@ -92,12 +73,8 @@
           <option disabled selected value="">請先選擇品項</option>
         </select>
       </label>
-      <label>單價
-        <input id="price" readonly placeholder="選擇品項後自動帶入"/>
-      </label>
-      <label>數量
-        <input id="qty" type="number" min="1" required placeholder="請輸入數量"/>
-      </label>
+      <label>單價<input id="price" readonly placeholder="選擇品項後自動帶入"/></label>
+      <label>數量<input id="qty" type="number" min="1" required placeholder="請輸入數量"/></label>
       <button id="btn" class="submit-btn" type="submit">送出訂單</button>
     </form>
   </div>
@@ -105,80 +82,75 @@
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbypXgBIFy_o_pN7tRd2oZrQSNLePFQFFaG6BOF_iW4OeDnNj7hL-XnWGRzReICVpNjC/exec';
 
-    function jsonp(url) {
-      return new Promise((resolve, reject) => {
-        const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-        window[cb] = data => { cleanup(); resolve(data); };
-        const script = document.createElement('script');
-        function cleanup() {
-          delete window[cb];
-          document.body.removeChild(script);
-        }
-        script.src = url
-          + (url.includes('?') ? '&' : '?')
-          + 'callback=' + cb
-          + '&_=' + Date.now();
-        script.onerror = () => { cleanup(); reject(new Error('JSONP load error')); };
-        document.body.appendChild(script);
-      });
+    // 封裝 fetch
+    async function fetchData(params) {
+      const url = API_URL + '?' + new URLSearchParams(params);
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error(resp.statusText);
+      return resp.json();
     }
 
     let cacheItems = [];
 
-    // DOMContentLoaded 確保一掛載就執行
-    document.addEventListener('DOMContentLoaded', () => {
-      jsonp(`${API_URL}?action=getCategories`)
-        .then(cats => {
-          document.getElementById('category').innerHTML =
-            '<option disabled selected value="">請選擇類別</option>' +
-            cats.map(c => `<option value="${c}">${c}</option>`).join('');
-        })
-        .catch(err => console.error('載入分類失敗', err));
+    // 1. DOMReady 立刻載入分類
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const cats = await fetchData({ action: 'getCategories' });
+        document.getElementById('category').innerHTML =
+          '<option disabled selected value="">請選擇類別</option>' +
+          cats.map(c => `<option value="${c}">${c}</option>`).join('');
+      } catch (e) {
+        console.error('載入分類失敗', e);
+        alert('載入分類失敗');
+      }
     });
 
-    function loadItems(cat) {
+    // 2. 選類別後載入品項＋準備快取
+    async function loadItems(cat) {
       if (!cat) return;
-      jsonp(`${API_URL}?action=getItemsWithPrice&cat=${encodeURIComponent(cat)}`)
-        .then(arr => {
-          cacheItems = arr;
-          document.getElementById('item').innerHTML =
-            '<option disabled selected value="">請先選擇品項</option>' +
-            arr.map(o => `<option value="${o.item}">${o.item}</option>`).join('');
-          document.getElementById('price').value = '';
-        })
-        .catch(err => console.error('載入品項失敗', err));
+      try {
+        cacheItems = await fetchData({ action: 'getItemsWithPrice', cat });
+        document.getElementById('item').innerHTML =
+          '<option disabled selected value="">請先選擇品項</option>' +
+          cacheItems.map(o => `<option value="${o.item}">${o.item}</option>`).join('');
+        document.getElementById('price').value = '';
+      } catch (e) {
+        console.error('載入品項失敗', e);
+        alert('載入品項失敗');
+      }
     }
 
+    // 3. 選品項後從快取顯示單價
     function showPrice(item) {
       const rec = cacheItems.find(o => o.item === item);
       document.getElementById('price').value = rec ? rec.price : '';
     }
 
-    document.getElementById('orderForm').addEventListener('submit', e => {
+    // 4. 送出表單
+    document.getElementById('orderForm').addEventListener('submit', async e => {
       e.preventDefault();
       const btn = document.getElementById('btn');
-      btn.disabled    = true;
+      btn.disabled = true;
       btn.textContent = '送出中…';
 
-      const params = new URLSearchParams({
-        action: 'submitOrder',
-        name:   e.target.name.value.trim(),
-        phone:  e.target.phone.value.trim(),
-        item:   e.target.item.value,
-        qty:    e.target.qty.value
-      });
-      jsonp(`${API_URL}?${params}`)
-        .then(res => {
-          if (res.error) throw new Error(res.error);
-          alert(`訂單送出成功！總金額：${res.total} 元`);
-          e.target.reset();
-          document.getElementById('price').value = '';
-        })
-        .catch(err => alert('送出失敗：' + err.message))
-        .finally(() => {
-          btn.disabled    = false;
-          btn.textContent = '送出訂單';
+      try {
+        const res = await fetchData({
+          action: 'submitOrder',
+          name:   e.target.name.value.trim(),
+          phone:  e.target.phone.value.trim(),
+          item:   e.target.item.value,
+          qty:    e.target.qty.value
         });
+        if (res.error) throw new Error(res.error);
+        alert(`訂單送出成功！總金額：${res.total} 元`);
+        e.target.reset();
+        document.getElementById('price').value = '';
+      } catch (err) {
+        alert('送出失敗：' + err.message);
+      } finally {
+        btn.disabled    = false;
+        btn.textContent = '送出訂單';
+      }
     });
   </script>
 </body>
