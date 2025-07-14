@@ -16,7 +16,6 @@
       --transition: 0.3s;
       --touch-height: 44px;
     }
-    /* 全局重置 */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
@@ -34,8 +33,7 @@
       align-items: center;
     }
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+      from { opacity: 0; } to { opacity: 1; }
     }
     .card {
       width: calc(100% - 2 * var(--gap));
@@ -48,8 +46,7 @@
       animation: fadeIn var(--transition);
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      min-height: auto;
+      height: calc(100vh - 2 * var(--gap));
     }
     .logo {
       display: block;
@@ -62,10 +59,10 @@
       font-size: 1.4rem;
     }
     form {
+      flex: 1;
       display: flex;
       flex-direction: column;
       gap: var(--gap);
-      flex-grow: 1;
       overflow-y: auto;
     }
     label {
@@ -88,7 +85,7 @@
       outline: none;
     }
     .submit-btn {
-      margin-top: var(--gap);
+      margin-top: auto;
       padding: 14px;
       font-size: 1.1rem;
       min-height: var(--touch-height);
@@ -104,7 +101,6 @@
       background: var(--primary-hover);
     }
 
-    /* 手機版全螢幕強制撐滿 */
     @media (max-width: 600px) {
       html, body {
         margin: 0 !important;
@@ -126,123 +122,110 @@
         padding: var(--gap) !important;
         border-radius: 0 !important;
         box-shadow: none !important;
-        overflow-y: auto !important;
       }
-    }
-
-    /* 超小螢幕微調 */
-    @media (max-width: 360px) {
-      :root { --gap: 10px; }
-      h2 { font-size: 1.2rem; }
-      input, select { padding: 10px; font-size: 0.9rem; }
-      .submit-btn { padding: 12px; font-size: 1rem; }
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <img
-      src="logo和勤.jpg"
-      alt="Logo"
-      class="logo"
-    />
+    <img src="./logo和勤.jpg" alt="和勤農產行 Logo" class="logo"/>
     <h2>和勤農產行 線上訂購</h2>
-    <form id="orderForm" onsubmit="return onSubmit()">
+    <form id="orderForm">
       <label>店家
-        <input id="name" type="text" required placeholder="請輸入店家名稱">
+        <input id="name" type="text" required placeholder="請輸入店家名稱"/>
       </label>
       <label>電話
-        <input id="phone" type="tel" required placeholder="請輸入聯絡電話">
+        <input id="phone" type="tel" required placeholder="請輸入聯絡電話"/>
       </label>
       <label>類別
         <select id="category" required>
-          <option disabled selected value="">請選擇類別</option>
+          <option value="">載入中…</option>
         </select>
       </label>
       <label>品項
         <select id="item" required>
-          <option disabled selected value="">請先選擇品項</option>
+          <option value="">請先選擇</option>
         </select>
       </label>
       <label>單價
-        <input id="price" type="text" readonly placeholder="選擇品項後自動帶入">
+        <input id="price" type="text" readonly placeholder="選擇品項後自動帶入"/>
       </label>
       <label>數量
-        <input id="qty" type="number" min="1" required placeholder="請輸入數量">
+        <input id="qty" type="number" min="1" required placeholder="請輸入數量"/>
       </label>
       <button id="btn" class="submit-btn" type="submit">送出訂單</button>
     </form>
   </div>
 
   <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbypXgBIFy_o_pN7tRd2oZrQSNLePFQFFaG6BOF_iW4OeDnNj7hL-XnWGRzReICVpNjC/exec';
+
+    async function fetchJSON(url, opts) {
+      const res = await fetch(url, opts);
+      if (!res.ok) throw new Error(res.statusText);
+      return res.json();
+    }
+
+    async function loadCategories() {
+      const cats = await fetchJSON(`${API_URL}?action=getCategories`);
+      document.getElementById('category').innerHTML =
+        '<option value="">請選擇類別</option>' +
+        cats.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
+    async function loadItems(cat) {
+      const items = await fetchJSON(`${API_URL}?action=getItems&cat=${encodeURIComponent(cat)}`);
+      document.getElementById('item').innerHTML =
+        '<option value="">請先選擇</option>' +
+        items.map(i => `<option value="${i}">${i}</option>`).join('');
+      document.getElementById('price').value = '';
+    }
+
+    async function loadPrice(item) {
+      const p = await fetchJSON(`${API_URL}?action=getPrice&item=${encodeURIComponent(item)}`);
+      document.getElementById('price').value = p || '';
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      const catSel  = document.getElementById('category');
+      const catSel = document.getElementById('category');
       const itemSel = document.getElementById('item');
-      const priceEl = document.getElementById('price');
+      const form = document.getElementById('orderForm');
+      const btn = document.getElementById('btn');
 
-      // 載入分類
-      google.script.run.withSuccessHandler(cats => {
-        catSel.innerHTML =
-          '<option disabled selected value="">請選擇類別</option>' +
-          cats.map(c => `<option value="${c}">${c}</option>`).join('');
-      }).getCategories();
+      loadCategories();
 
-      catSel.addEventListener('change', updateItemOptions);
-      itemSel.addEventListener('change', () => {
-        const item = itemSel.value;
-        priceEl.value = '';
-        if (!item) return;
-        google.script.run.withSuccessHandler(p => {
-          priceEl.value = p;
-        }).getPrice(item);
+      catSel.addEventListener('change', e => loadItems(e.target.value));
+      itemSel.addEventListener('change', e => loadPrice(e.target.value));
+
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.textContent = '送出中…';
+
+        const payload = {
+          name: document.getElementById('name').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          item: document.getElementById('item').value,
+          qty: Number(document.getElementById('qty').value),
+        };
+
+        try {
+          const { total } = await fetchJSON(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          alert(`訂單送出成功！總金額：${total} 元`);
+          form.reset();
+          document.getElementById('price').value = '';
+        } catch (err) {
+          alert('送出失敗：' + err);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '送出訂單';
+        }
       });
     });
-
-    function updateItemOptions() {
-      const cat    = document.getElementById('category').value;
-      const itemSel = document.getElementById('item');
-      const priceEl = document.getElementById('price');
-
-      itemSel.innerHTML = '<option disabled selected value="">請先選擇品項</option>';
-      priceEl.value     = '';
-
-      google.script.run.withSuccessHandler(items => {
-        items.forEach(i => {
-          const opt = document.createElement('option');
-          opt.value = i;
-          opt.text  = i;
-          itemSel.appendChild(opt);
-        });
-      }).getItemsByCategory(cat);
-    }
-
-    function onSubmit() {
-      const btn = document.getElementById('btn');
-      btn.disabled    = true;
-      btn.textContent = '送出中…';
-
-      const data = {
-        name:  document.getElementById('name').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        item:  document.getElementById('item').value,
-        qty:   parseInt(document.getElementById('qty').value, 10)
-      };
-
-      google.script.run
-        .withSuccessHandler(total => {
-          alert(`訂單送出成功！本筆訂單總金額：${total} 元`);
-          document.getElementById('orderForm').reset();
-          document.getElementById('price').value = '';
-        })
-        .withFailureHandler(err => {
-          alert(err.message);
-        })
-        .submitOrder(data);
-
-      btn.disabled    = false;
-      btn.textContent = '送出訂單';
-      return false;
-    }
   </script>
 </body>
 </html>
