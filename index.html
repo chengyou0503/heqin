@@ -15,142 +15,238 @@
       --gap: 1rem;
       --transition: 0.3s;
     }
-    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     html, body {
-      width:100vw; height:100vh; background:var(--bg);
-      font-family:'Noto Sans TC',sans-serif;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg);
+      font-family: 'Noto Sans TC', sans-serif;
     }
     body {
-      display:flex; justify-content:center; align-items:center;
-      padding:var(--gap);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: var(--gap);
     }
     .card {
-      background:var(--card-bg);
-      border-radius:var(--radius);
-      box-shadow:0 2px 8px rgba(0,0,0,0.1);
-      width:100%; max-width:800px; max-height:100%;
-      display:flex; flex-direction:column; padding:var(--gap);
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      padding: var(--gap);
+      max-height: 100%;
     }
     .logo {
-      display:block; margin:0 auto var(--gap); max-width:120px;
+      display: block;
+      margin: 0 auto var(--gap);
+      max-width: 120px;
     }
     h2 {
-      text-align:center; color:var(--primary);
-      font-size:1.5rem; margin-bottom:var(--gap); font-weight:700;
+      text-align: center;
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: var(--gap);
+      font-weight: 700;
     }
     form {
-      flex:1; display:flex; flex-direction:column;
-      gap:var(--gap); overflow-y:auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+      overflow-y: auto;
     }
-    label { font-size:1rem; font-weight:500 }
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+    }
     input, select {
-      width:100%; padding:0.75rem; font-size:1rem;
-      border:1px solid #d1d5db; border-radius:var(--radius);
-      transition:border-color var(--transition), box-shadow var(--transition);
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: var(--radius);
+      transition: border-color var(--transition), box-shadow var(--transition);
     }
     input:focus, select:focus {
-      border-color:var(--primary);
-      box-shadow:0 0 0 3px rgba(255,107,107,0.2);
-      outline:none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255,107,107,0.2);
+      outline: none;
     }
-    select { margin-top:0.5rem }
-
+    select {
+      margin-top: 0.5rem;
+    }
+    #currentCategory {
+      font-size: 1rem;
+      color: #374151;
+      margin-bottom: 0.5rem;
+      min-height: 1.2em;
+    }
     #itemsContainer {
-      display:flex; flex-wrap:wrap; gap:var(--gap);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--gap);
     }
     .loading {
-      font-size:1rem; color:#6b7280; padding:1rem;
+      font-size: 1rem;
+      color: #6b7280;
+      padding: 1rem;
     }
     .item-option {
-      background:#fff; border-radius:var(--radius);
-      box-shadow:0 1px 4px rgba(0,0,0,0.08);
-      display:grid; grid-template-columns:auto 1fr auto;
-      align-items:center; gap:0.5rem; padding:0.75rem;
-      flex:1 1 calc(50% - var(--gap));
-      transition:box-shadow var(--transition);
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      flex: 1 1 calc(50% - var(--gap));
+      transition: box-shadow var(--transition);
+      cursor: pointer;
     }
     .item-option:hover {
-      box-shadow:0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
-    @media(max-width:900px){ .item-option{flex:1 1 calc(50% - var(--gap))} }
-    @media(max-width:600px){ .item-option{flex:1 1 100%} }
+    @media (max-width: 900px) {
+      .item-option { flex: 1 1 calc(50% - var(--gap)); }
+    }
+    @media (max-width: 600px) {
+      .item-option { flex: 1 1 100%; }
+    }
+    .item-option input[type="checkbox"] {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
     .item-label {
-      font-size:0.95rem; line-height:1.3;
-      cursor:pointer; user-select:none;
+      font-size: 0.95rem;
+      line-height: 1.3;
+      user-select: none;
     }
-
     .qty-control {
-      display:flex; align-items:center;
-      border:1px solid #d1d5db; border-radius:var(--radius);
-      overflow:hidden;
+      display: flex;
+      align-items: center;
+      border: 1px solid #d1d5db;
+      border-radius: var(--radius);
+      overflow: hidden;
+      flex-shrink: 0;
     }
     .qty-control button {
-      width:2rem; height:2rem; border:none;
-      background:#f3f4f6; cursor:pointer; font-size:1.2rem;
-      transition:background var(--transition);
+      width: 2rem;
+      height: 2rem;
+      border: none;
+      background: #f3f4f6;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: background var(--transition);
     }
-    .qty-control button:hover { background:#e5e7eb; }
+    .qty-control button:hover {
+      background: #e5e7eb;
+    }
     .qty-control input {
-      width:3rem; height:2rem; text-align:center;
-      border:none; font-size:1rem; outline:none;
+      width: 3rem;
+      height: 2rem;
+      text-align: center;
+      border: none;
+      font-size: 1rem;
+      outline: none;
     }
     .qty-control input::-webkit-inner-spin-button,
     .qty-control input::-webkit-outer-spin-button {
-      -webkit-appearance:none; margin:0;
+      -webkit-appearance: none;
+      margin: 0;
     }
-    .qty-control input { -moz-appearance:textfield; }
-
+    .qty-control input { -moz-appearance: textfield; }
     .submit-btn {
-      margin-top:auto; padding:0.75rem; font-size:1.1rem;
-      background:var(--primary); color:#fff; border:none;
-      border-radius:var(--radius); cursor:pointer;
-      transition:background var(--transition);
+      margin-top: auto;
+      padding: 0.75rem;
+      font-size: 1.1rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--transition);
     }
-    .submit-btn:hover { background:var(--primary-hover); }
-
+    .submit-btn:hover {
+      background: var(--primary-hover);
+    }
     .modal {
-      position:fixed; top:0; left:0; width:100%; height:100%;
-      background:rgba(0,0,0,0.4); display:none;
-      justify-content:center; align-items:center; z-index:1000;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
     }
-    .modal.active { display:flex; }
+    .modal.active { display: flex; }
     .modal-content {
-      background:#fff; border-radius:var(--radius);
-      width:90%; max-width:400px; padding:var(--gap);
-      box-shadow:0 2px 8px rgba(0,0,0,0.2);
-      display:flex; flex-direction:column; gap:var(--gap);
+      background: #fff;
+      border-radius: var(--radius);
+      width: 90%; max-width: 400px;
+      padding: var(--gap);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
     }
     .modal-header {
-      font-size:1.2rem; font-weight:700; color:var(--primary);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary);
     }
     .modal-body {
-      display:flex; flex-direction:column; gap:0.5rem;
-      max-height:300px; overflow-y:auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 300px;
+      overflow-y: auto;
     }
     .confirm-item {
-      display:flex; justify-content:space-between;
-      align-items:center; padding:0.5rem;
-      border:1px solid #e5e7eb; border-radius:var(--radius);
-      font-size:0.95rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem;
+      border: 1px solid #e5e7eb;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
     }
     .remove-btn {
-      background:transparent; border:none; cursor:pointer;
-      font-size:1.1rem; color:#999;
-      transition:color var(--transition);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: #999;
+      transition: color var(--transition);
     }
-    .remove-btn:hover { color:#555; }
+    .remove-btn:hover { color: #555; }
     .modal-footer {
-      display:flex; justify-content:flex-end; gap:0.5rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
     }
     .btn-cancel, .btn-confirm {
-      padding:0.5rem 1rem; font-size:1rem;
-      border-radius:var(--radius); border:none; cursor:pointer;
-      transition:background var(--transition);
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      transition: background var(--transition);
     }
-    .btn-cancel { background:#d1d5db; color:#333; }
-    .btn-cancel:hover { background:#9ca3af; }
-    .btn-confirm { background:var(--primary); color:#fff; }
-    .btn-confirm:hover { background:var(--primary-hover); }
+    .btn-cancel { background: #d1d5db; color: #333; }
+    .btn-cancel:hover { background: #9ca3af; }
+    .btn-confirm { background: var(--primary); color: #fff; }
+    .btn-confirm:hover { background: var(--primary-hover); }
   </style>
 </head>
 <body>
@@ -163,9 +259,10 @@
       <label>電話</label>
       <input id="phone" required placeholder="請輸入聯絡電話"/>
       <label>選擇類別</label>
-      <select id="category" onchange="loadItems(this.value)">
+      <select id="category">
         <option disabled selected value="">請選擇類別</option>
       </select>
+      <div id="currentCategory">當前類別：—</div>
       <div id="itemsContainer"></div>
       <button id="btn" class="submit-btn" type="submit">送出訂單</button>
     </form>
@@ -185,7 +282,6 @@
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbwuQx1pJfNBm_qxiXNKhn_9XyxNSXQdSf8ZMqL5dRBdG0eKFOKI45yDCW5QG5vxfXFm/exec';
     const pending = {};
-    const itemsCache = {};
     let categories = [];
 
     function jsonp(params) {
@@ -201,36 +297,36 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
       const sel = document.getElementById('category');
+      const current = document.getElementById('currentCategory');
       try {
-        categories = await jsonp({ action:'getCategories' });
-        sel.innerHTML = '<option disabled selected value="">請選擇類別</option>'
-          + categories.map(c=>`<option value="${c}">${c}</option>`).join('');
-        // 預抓所有品項
-        categories.forEach(cat=>{
-          jsonp({action:'getItemsWithPrice',cat})
-            .then(items=>itemsCache[cat]=items)
-            .catch(()=>itemsCache[cat]=[]);
-        });
-      } catch(e) {
-        alert('載入分類失敗：'+e.message);
+        categories = await jsonp({ action: 'getCategories' });
+        sel.innerHTML = '<option disabled selected value="">請選擇類別</option>' +
+          categories.map(c => `<option value="${c}">${c}</option>`).join('');
+      } catch (e) {
+        alert('載入分類失敗：' + e.message);
+        return;
       }
+      sel.addEventListener('change', () => {
+        const cat = sel.value;
+        if (!cat) return;
+        loadItems(cat);
+      });
 
       document.getElementById('orderForm').addEventListener('submit', e => {
         e.preventDefault();
         const arr = Object.values(pending);
-        if (!arr.length) {
-          alert('請至少選擇一個品項！');
-          return;
-        }
+        if (!arr.length) return alert('請至少選擇一個品項！');
         showConfirmModal(arr);
       });
-      document.querySelector('.btn-cancel').addEventListener('click', ()=>{
+
+      document.querySelector('.btn-cancel').addEventListener('click', () => {
         document.getElementById('confirmModal').classList.remove('active');
       });
-      document.querySelector('.btn-confirm').addEventListener('click', async ()=>{
+      document.querySelector('.btn-confirm').addEventListener('click', async () => {
         const arr = Object.values(pending);
         const btn = document.querySelector('.btn-confirm');
-        btn.disabled = true; btn.textContent = '送出中…';
+        btn.disabled = true;
+        btn.textContent = '送出中…';
         try {
           const res = await jsonp({
             action: 'submitOrder',
@@ -242,39 +338,38 @@
           alert(`訂單完成！總金額：${res.total} 元`);
           document.getElementById('orderForm').reset();
           document.getElementById('itemsContainer').innerHTML = '';
+          current.textContent = '當前類別：—';
           for (let k in pending) delete pending[k];
-        } catch(err) {
-          alert('送出失敗：'+err.message);
+        } catch (err) {
+          alert('送出失敗：' + err.message);
         } finally {
-          btn.textContent = '確認送出'; btn.disabled = false;
+          btn.textContent = '確認送出';
+          btn.disabled = false;
           document.getElementById('confirmModal').classList.remove('active');
         }
       });
     });
 
     async function loadItems(cat) {
-      if (!cat) return;
       const container = document.getElementById('itemsContainer');
+      const current = document.getElementById('currentCategory');
+      current.textContent = `當前類別：${cat}`;
       container.innerHTML = '<div class="loading">載入中…</div>';
-      let items = itemsCache[cat];
-      if (!items) {
-        try {
-          items = await jsonp({action:'getItemsWithPrice',cat});
-          itemsCache[cat] = items;
-        } catch(e) {
-          alert('載入品項失敗：'+e.message);
-          container.innerHTML = '';
-          return;
-        }
+      let items;
+      try {
+        items = await jsonp({ action: 'getItemsWithPrice', cat });
+      } catch (e) {
+        alert('載入品項失敗：' + e.message);
+        container.innerHTML = '';
+        return;
       }
       container.innerHTML = '';
       items.forEach(o => {
         const div = document.createElement('div');
         div.className = 'item-option';
-        const exist = pending[o.item] || {qty:0};
+        const exist = pending[o.item] || { qty: 0 };
         div.innerHTML = `
-          <input type="checkbox" ${exist.qty>0?'checked':''}
-                 data-price="${o.price}" value="${o.item}">
+          <input type="checkbox" ${exist.qty > 0 ? 'checked' : ''} data-price="${o.price}" value="${o.item}">
           <div class="item-label">${o.item}<br>NT$ ${o.price}</div>
           <div class="qty-control">
             <button type="button" class="qty-minus">−</button>
@@ -286,31 +381,27 @@
         const qtyIn = div.querySelector('input[type="number"]');
         const btnM = div.querySelector('.qty-minus');
         const btnP = div.querySelector('.qty-plus');
-        const label = div.querySelector('.item-label');
 
         function update(v) {
-          v = Math.max(0, parseInt(v,10)||0);
+          v = Math.max(0, parseInt(v, 10) || 0);
           qtyIn.value = v;
-          cb.checked = v>0;
-          if (v>0) pending[o.item] = {item:o.item, price:o.price, qty:v};
+          cb.checked = v > 0;
+          if (v > 0) pending[o.item] = { item: o.item, price: o.price, qty: v };
           else delete pending[o.item];
         }
 
-        btnP.addEventListener('click', ()=> update(qtyIn.value*1+1));
-        btnM.addEventListener('click', ()=> update(qtyIn.value*1-1));
-        qtyIn.addEventListener('input', ()=> update(qtyIn.value));
-        cb.addEventListener('change', ()=> cb.checked?update(qtyIn.value||1):update(0));
+        btnP.addEventListener('click', () => update(qtyIn.value * 1 + 1));
+        btnM.addEventListener('click', () => update(qtyIn.value * 1 - 1));
+        qtyIn.addEventListener('input', () => update(qtyIn.value));
+        cb.addEventListener('change', () => cb.checked ? update(qtyIn.value || 1) : update(0));
 
-        // 點品項文字：切換勾選/取消
-        label.addEventListener('click', ()=>{
-          if (cb.checked) update(0);
-          else update(1);
+        div.addEventListener('click', e => {
+          if ([btnM, btnP, qtyIn, cb].includes(e.target)) return;
+          cb.checked ? update(0) : update(1);
         });
 
         container.appendChild(div);
       });
-      // 載入完後重設下拉，確保下次選同類別也能觸發
-      document.getElementById('category').value = '';
     }
 
     function showConfirmModal(arr) {
@@ -319,18 +410,15 @@
       arr.forEach(o => {
         const row = document.createElement('div');
         row.className = 'confirm-item';
-        row.innerHTML = `
-          <span>${o.item} x ${o.qty}</span>
-          <button class="remove-btn">🗑️</button>
-        `;
-        row.querySelector('.remove-btn').addEventListener('click', ()=>{
+        row.innerHTML = `<span>${o.item} x ${o.qty}</span><button class="remove-btn">🗑️</button>`;
+        row.querySelector('.remove-btn').addEventListener('click', () => {
           delete pending[o.item];
           showConfirmModal(Object.values(pending));
         });
         list.appendChild(row);
       });
       document.getElementById('confirmModal').classList.add('active');
-      document.querySelector('.btn-confirm').disabled = arr.length===0;
+      document.querySelector('.btn-confirm').disabled = arr.length === 0;
     }
   </script>
 </body>
