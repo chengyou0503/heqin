@@ -18,7 +18,7 @@
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     html, body {
       width:100vw; height:100vh; background:var(--bg);
-      font-family:'Noto Sans TC', sans-serif;
+      font-family:'Noto Sans TC',sans-serif;
     }
     body {
       display:flex; justify-content:center; align-items:center;
@@ -76,8 +76,7 @@
     @media(max-width:600px){ .item-option{flex:1 1 100%} }
     .item-label {
       font-size:0.95rem; line-height:1.3;
-      cursor:pointer;
-      user-select:none;
+      cursor:pointer; user-select:none;
     }
 
     .qty-control {
@@ -148,13 +147,9 @@
       border-radius:var(--radius); border:none; cursor:pointer;
       transition:background var(--transition);
     }
-    .btn-cancel {
-      background:#d1d5db; color:#333;
-    }
+    .btn-cancel { background:#d1d5db; color:#333; }
     .btn-cancel:hover { background:#9ca3af; }
-    .btn-confirm {
-      background:var(--primary); color:#fff;
-    }
+    .btn-confirm { background:var(--primary); color:#fff; }
     .btn-confirm:hover { background:var(--primary-hover); }
   </style>
 </head>
@@ -168,7 +163,7 @@
       <label>電話</label>
       <input id="phone" required placeholder="請輸入聯絡電話"/>
       <label>選擇類別</label>
-      <select id="category" onchange="loadItems(this.value)" onclick="loadItems(this.value)">
+      <select id="category" onchange="loadItems(this.value)">
         <option disabled selected value="">請選擇類別</option>
       </select>
       <div id="itemsContainer"></div>
@@ -210,7 +205,7 @@
         categories = await jsonp({ action:'getCategories' });
         sel.innerHTML = '<option disabled selected value="">請選擇類別</option>'
           + categories.map(c=>`<option value="${c}">${c}</option>`).join('');
-        // 背景預抓
+        // 預抓所有品項
         categories.forEach(cat=>{
           jsonp({action:'getItemsWithPrice',cat})
             .then(items=>itemsCache[cat]=items)
@@ -306,7 +301,7 @@
         qtyIn.addEventListener('input', ()=> update(qtyIn.value));
         cb.addEventListener('change', ()=> cb.checked?update(qtyIn.value||1):update(0));
 
-        // 點品項文字：若未勾選 → 勾選並設1；若已勾選 → 取消並設0
+        // 點品項文字：切換勾選/取消
         label.addEventListener('click', ()=>{
           if (cb.checked) update(0);
           else update(1);
@@ -314,6 +309,8 @@
 
         container.appendChild(div);
       });
+      // 載入完後重設下拉，確保下次選同類別也能觸發
+      document.getElementById('category').value = '';
     }
 
     function showConfirmModal(arr) {
