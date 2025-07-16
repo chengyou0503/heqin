@@ -393,7 +393,13 @@
         btnP.addEventListener('click', () => update(qtyIn.value * 1 + 1));
         btnM.addEventListener('click', () => update(qtyIn.value * 1 - 1));
         qtyIn.addEventListener('input', () => update(qtyIn.value));
-        cb.addEventListener('click', e => { e.stopPropagation(); update(cb.checked ? qtyIn.value || 1 : 0); });
+
+        // 修正：勾選固定設 qty = 1，取消設 qty = 0
+        cb.addEventListener('click', e => {
+          e.stopPropagation();
+          update(cb.checked ? 1 : 0);
+        });
+
         div.addEventListener('click', e => {
           if ([btnM, btnP, qtyIn, cb].includes(e.target)) return;
           update(cb.checked ? 0 : 1);
