@@ -6,251 +6,7 @@
   <title>和勤農產行 線上訂購</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --primary: #ff6b6b;
-      --primary-hover: #e65555;
-      --bg: #f9fafb;
-      --card-bg: #ffffff;
-      --radius: 0.5rem;
-      --gap: 1rem;
-      --transition: 0.3s;
-    }
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    html, body {
-      width: 100vw;
-      height: 100vh;
-      background: var(--bg);
-      font-family: 'Noto Sans TC', sans-serif;
-    }
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: var(--gap);
-    }
-    .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 800px;
-      display: flex;
-      flex-direction: column;
-      padding: var(--gap);
-      max-height: 100%;
-    }
-    .logo {
-      display: block;
-      margin: 0 auto var(--gap);
-      max-width: 120px;
-    }
-    h2 {
-      text-align: center;
-      color: var(--primary);
-      font-size: 1.5rem;
-      margin-bottom: var(--gap);
-      font-weight: 700;
-    }
-    form {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: var(--gap);
-      overflow-y: auto;
-    }
-    label {
-      font-size: 1rem;
-      font-weight: 500;
-    }
-    input, select {
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: var(--radius);
-      transition: border-color var(--transition), box-shadow var(--transition);
-    }
-    input:focus, select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(255,107,107,0.2);
-      outline: none;
-    }
-    select {
-      margin-top: 0.5rem;
-    }
-    #currentCategory {
-      font-size: 1rem;
-      color: #374151;
-      margin-bottom: 0.5rem;
-      min-height: 1.2em;
-    }
-    #itemsContainer {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--gap);
-    }
-    .loading {
-      font-size: 1rem;
-      color: #6b7280;
-      padding: 1rem;
-    }
-    .item-option {
-      background: #fff;
-      border-radius: var(--radius);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem;
-      flex: 1 1 calc(50% - var(--gap));
-      transition: box-shadow var(--transition);
-      cursor: pointer;
-    }
-    .item-option:hover {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    @media (max-width: 900px) {
-      .item-option { flex: 1 1 calc(50% - var(--gap)); }
-    }
-    @media (max-width: 600px) {
-      .item-option { flex: 1 1 100%; }
-    }
-    .item-option input[type="checkbox"] {
-      flex-shrink: 0;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-    }
-    .item-label {
-      font-size: 0.95rem;
-      line-height: 1.3;
-      user-select: none;
-    }
-    .item-price {
-      color: #6b7280;
-      font-size: 0.85rem;
-    }
-    .qty-control {
-      display: flex;
-      align-items: center;
-      border: 1px solid #d1d5db;
-      border-radius: var(--radius);
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-    .qty-control button {
-      width: 2rem;
-      height: 2rem;
-      border: none;
-      background: #f3f4f6;
-      cursor: pointer;
-      font-size: 1.2rem;
-      transition: background var(--transition);
-    }
-    .qty-control button:hover {
-      background: #e5e7eb;
-    }
-    .qty-control input {
-      width: 3rem;
-      height: 2rem;
-      text-align: center;
-      border: none;
-      font-size: 1rem;
-      outline: none;
-    }
-    .qty-control input::-webkit-inner-spin-button,
-    .qty-control input::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    .qty-control input { -moz-appearance: textfield; }
-    .submit-btn {
-      margin-top: auto;
-      padding: 0.75rem;
-      font-size: 1.1rem;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: background var(--transition);
-    }
-    .submit-btn:hover {
-      background: var(--primary-hover);
-    }
-    .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .modal.active { display: flex; }
-    .modal-content {
-      background: #fff;
-      border-radius: var(--radius);
-      width: 90%; max-width: 400px;
-      padding: var(--gap);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      display: flex;
-      flex-direction: column;
-      gap: var(--gap);
-    }
-    .modal-header {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-    .modal-body {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    .confirm-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem;
-      border: 1px solid #e5e7eb;
-      border-radius: var(--radius);
-      font-size: 0.95rem;
-    }
-    .remove-btn {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 1.1rem;
-      color: #999;
-      transition: color var(--transition);
-    }
-    .remove-btn:hover { color: #555; }
-    .modal-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.5rem;
-    }
-    .btn-cancel, .btn-confirm {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      border-radius: var(--radius);
-      border: none;
-      cursor: pointer;
-      transition: background var(--transition);
-    }
-    .btn-cancel { background: #d1d5db; color: #333; }
-    .btn-cancel:hover { background: #9ca3af; }
-    .btn-confirm { background: var(--primary); color: #fff; }
-    .btn-confirm:hover { background: var(--primary-hover); }
+    :root { --primary: #ff6b6b; --primary-hover: #e65555; --bg: #f9fafb; --card-bg: #ffffff; --radius: 0.5rem; --gap: 1rem; --transition: 0.3s; } *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } html, body { width: 100vw; height: 100vh; background: var(--bg); font-family: 'Noto Sans TC', sans-serif; } body { display: flex; justify-content: center; align-items: center; padding: var(--gap); } .card { background: var(--card-bg); border-radius: var(--radius); box-shadow: 0 2px 8px rgba(0,0,0,0.1); width: 100%; max-width: 800px; display: flex; flex-direction: column; padding: var(--gap); max-height: 100%; } .logo { display: block; margin: 0 auto var(--gap); max-width: 120px; } h2 { text-align: center; color: var(--primary); font-size: 1.5rem; margin-bottom: var(--gap); font-weight: 700; } form { flex: 1; display: flex; flex-direction: column; gap: var(--gap); overflow-y: auto; } label { font-size: 1rem; font-weight: 500; } input, select { width: 100%; padding: 0.75rem; font-size: 1rem; border: 1px solid #d1d5db; border-radius: var(--radius); transition: border-color var(--transition), box-shadow var(--transition); } input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255,107,107,0.2); outline: none; } select { margin-top: 0.5rem; } #currentCategory { font-size: 1rem; color: #374151; margin-bottom: 0.5rem; min-height: 1.2em; } #itemsContainer { display: flex; flex-wrap: wrap; gap: var(--gap); } .loading { font-size: 1rem; color: #6b7280; padding: 1rem; } .item-option { background: #fff; border-radius: var(--radius); box-shadow: 0 1px 4px rgba(0,0,0,0.08); display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.5rem; padding: 0.75rem; flex: 1 1 calc(50% - var(--gap)); transition: box-shadow var(--transition); cursor: pointer; } .item-option:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.15); } @media (max-width: 900px) { .item-option { flex: 1 1 calc(50% - var(--gap)); } } @media (max-width: 600px) { .item-option { flex: 1 1 100%; } } .item-option input[type="checkbox"] { flex-shrink: 0; width: 20px; height: 20px; cursor: pointer; } .item-label { font-size: 0.95rem; line-height: 1.3; user-select: none; } .item-unit { color: #888; font-size: 0.9em; } .item-price { color: #6b7280; font-size: 0.85rem; } .qty-control { display: flex; align-items: center; border: 1px solid #d1d5db; border-radius: var(--radius); overflow: hidden; flex-shrink: 0; } .qty-control button { width: 2rem; height: 2rem; border: none; background: #f3f4f6; cursor: pointer; font-size: 1.2rem; transition: background var(--transition); } .qty-control button:hover { background: #e5e7eb; } .qty-control input { width: 3rem; height: 2rem; text-align: center; border: none; font-size: 1rem; outline: none; } .qty-control input::-webkit-inner-spin-button, .qty-control input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; } .qty-control input { -moz-appearance: textfield; } .submit-btn { margin-top: auto; padding: 0.75rem; font-size: 1.1rem; background: var(--primary); color: #fff; border: none; border-radius: var(--radius); cursor: pointer; transition: background var(--transition); } .submit-btn:hover { background: var(--primary-hover); } .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 1000; } .modal.active { display: flex; } .modal-content { background: #fff; border-radius: var(--radius); width: 90%; max-width: 400px; padding: var(--gap); box-shadow: 0 2px 8px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: var(--gap); } .modal-header { font-size: 1.2rem; font-weight: 700; color: var(--primary); } .modal-body { display: flex; flex-direction: column; gap: 0.5rem; max-height: 300px; overflow-y: auto; } .confirm-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: var(--radius); font-size: 0.95rem; } .remove-btn { background: transparent; border: none; cursor: pointer; font-size: 1.1rem; color: #999; transition: color var(--transition); } .remove-btn:hover { color: #555; } .modal-footer { display: flex; justify-content: flex-end; gap: 0.5rem; } .btn-cancel, .btn-confirm { padding: 0.5rem 1rem; font-size: 1rem; border-radius: var(--radius); border: none; cursor: pointer; transition: background var(--transition); } .btn-cancel { background: #d1d5db; color: #333; } .btn-cancel:hover { background: #9ca3af; } .btn-confirm { background: var(--primary); color: #fff; } .btn-confirm:hover { background: var(--primary-hover); }
   </style>
 </head>
 <body>
@@ -284,7 +40,7 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycby_x61E6YAUXfvgvXjpMC_GzPNcfS7PJzhNYv159pgaoC_S97YpSBiXPOEflHOALcuX1Q/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwGZO6hFnMkufOYBjbg5_ft0g9oSfX3aAefIhcIU62ng3yp1d8j-swlFgnneNe9Q71DYg/exec';
     const pending = {};
 
     let allCustomers = {};
@@ -324,7 +80,6 @@
       
       nameInput.addEventListener('blur', () => {
         const name = nameInput.value.trim();
-        
         if (allCustomers.hasOwnProperty(name)) {
           currentUserType = allCustomers[name];
           categorySelect.disabled = false;
@@ -349,7 +104,6 @@
         e.preventDefault();
         const arr = Object.values(pending);
         if (!arr.length) return alert('請至少選擇一個品項！');
-        
         const name = nameInput.value.trim();
         if (!allCustomers.hasOwnProperty(name)) {
             alert('店家名稱無效，無法提交訂單！');
@@ -375,13 +129,11 @@
             orders: JSON.stringify(arr)
           });
           if (res.error) throw new Error(res.error);
-
           if (currentUserType === '連鎖店家') {
             alert(`訂單完成！總金額：${res.total} 元`);
           } else {
             alert('感謝您的訂單！');
           }
-
           document.getElementById('orderForm').reset();
           document.getElementById('itemsContainer').innerHTML = '';
           document.getElementById('currentCategory').textContent = '當前類別：—';
@@ -406,6 +158,7 @@
       container.innerHTML = '<div class="loading">載入中…</div>';
       let items;
       try {
+        // API 現在會回傳 item, unit, price
         items = await jsonp({ action: 'getItemsWithPrice', cat });
       } catch (e) {
         alert('載入品項失敗：' + e.message);
@@ -423,9 +176,11 @@
           priceDisplay = `<br><span class="item-price">NT$ ${o.price}</span>`;
         }
         
+        // 修改：顯示品項與單位
+        const unitText = o.unit ? ` / ${o.unit}` : '';
         div.innerHTML = `
-          <input type="checkbox" ${exist.qty > 0 ? 'checked' : ''} data-price="${o.price}" value="${o.item}">
-          <div class="item-label">${o.item}${priceDisplay}</div>
+          <input type="checkbox" ${exist.qty > 0 ? 'checked' : ''} value="${o.item}">
+          <div class="item-label">${o.item}<span class="item-unit">${unitText}</span>${priceDisplay}</div>
           <div class="qty-control">
             <button type="button" class="qty-minus">−</button>
             <input type="number" min="0" value="${exist.qty}">
@@ -442,17 +197,18 @@
           v = Math.max(0, parseInt(v, 10) || 0);
           qtyIn.value = v;
           cb.checked = v > 0;
-          if (v > 0) pending[o.item] = { item: o.item, price: o.price, qty: v };
-          else delete pending[o.item];
+          if (v > 0) {
+            // 修改：儲存訂單時，一併存入單位
+            pending[o.item] = { item: o.item, unit: o.unit, price: o.price, qty: v };
+          } else {
+            delete pending[o.item];
+          }
         }
 
         btnP.addEventListener('click', () => update(qtyIn.value * 1 + 1));
         btnM.addEventListener('click', () => update(qtyIn.value * 1 - 1));
         qtyIn.addEventListener('input', () => update(qtyIn.value));
-        cb.addEventListener('click', e => {
-          e.stopPropagation();
-          update(cb.checked ? 1 : 0);
-        });
+        cb.addEventListener('click', e => { e.stopPropagation(); update(cb.checked ? 1 : 0); });
         div.addEventListener('click', e => {
           if ([btnM, btnP, qtyIn, cb].includes(e.target)) return;
           update(cb.checked ? 0 : 1);
@@ -469,9 +225,11 @@
         if (currentUserType === '連鎖店家') {
           priceInfo = ` (NT$ ${o.price})`;
         }
+        // 修改：在確認視窗中也顯示單位
+        const unitText = o.unit ? ` / ${o.unit}` : '';
         const row = document.createElement('div');
         row.className = 'confirm-item';
-        row.innerHTML = `<span>${o.item}${priceInfo} x ${o.qty}</span><button class="remove-btn">🗑️</button>`;
+        row.innerHTML = `<span>${o.item}<span class="item-unit">${unitText}</span>${priceInfo} x ${o.qty}</span><button class="remove-btn">🗑️</button>`;
         row.querySelector('.remove-btn').addEventListener('click', () => {
           delete pending[o.item];
           loadItems(document.getElementById('category').value); 
