@@ -131,6 +131,10 @@
       line-height: 1.3;
       user-select: none;
     }
+    .item-price {
+      color: #6b7280;
+      font-size: 0.85rem;
+    }
     .qty-control {
       display: flex;
       align-items: center;
@@ -259,8 +263,8 @@
       <label>電話</label>
       <input id="phone" required placeholder="請輸入聯絡電話"/>
       <label>選擇類別</label>
-      <select id="category">
-        <option disabled selected value="">請選擇類別</option>
+      <select id="category" disabled>
+        <option disabled selected value="">請先輸入有效的店家名稱</option>
       </select>
       <div id="currentCategory">當前類別：—</div>
       <div id="itemsContainer"></div>
@@ -280,9 +284,12 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwuQx1pJfNBm_qxiXNKhn_9XyxNSXQdSf8ZMqL5dRBdG0eKFOKI45yDCW5QG5vxfXFm/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyOu4y8_MfFhNaUy8BP5WOJswt-F1htrIZ3ngY4zhFLmOfyuK5QC7Rxpi3VeSbQiLWaBA/exec';
     const pending = {};
-    let categories = [];
+
+    let allCustomers = {};
+    let allCategories = [];
+    let currentUserType = null;
 
     function jsonp(params) {
       return new Promise((resolve, reject) => {
@@ -295,19 +302,45 @@
       });
     }
 
+    async function initializeApp() {
+        document.getElementById('name').placeholder = "資料載入中，請稍候...";
+        try {
+            const data = await jsonp({ action: 'getInitialData' });
+            if (data.error) throw new Error(data.error);
+            allCustomers = data.customers || {};
+            allCategories = data.categories || [];
+            document.getElementById('name').placeholder = "請輸入店家名稱";
+        } catch (e) {
+            alert('系統初始化失敗，請重新整理頁面：' + e.message);
+            document.getElementById('name').placeholder = "初始化失敗，請重整";
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
-      const sel = document.getElementById('category');
-      const current = document.getElementById('currentCategory');
-      try {
-        categories = await jsonp({ action: 'getCategories' });
-        sel.innerHTML = '<option disabled selected value="">請選擇類別</option>' +
-          categories.map(c => `<option value="${c}">${c}</option>`).join('');
-      } catch (e) {
-        alert('載入分類失敗：' + e.message);
-        return;
-      }
-      sel.addEventListener('change', () => {
-        const cat = sel.value;
+      await initializeApp();
+
+      const nameInput = document.getElementById('name');
+      const categorySelect = document.getElementById('category');
+      
+      nameInput.addEventListener('blur', () => {
+        const name = nameInput.value.trim();
+        
+        if (allCustomers.hasOwnProperty(name)) {
+          currentUserType = allCustomers[name];
+          categorySelect.disabled = false;
+          categorySelect.innerHTML = '<option disabled selected value="">請選擇類別</option>' +
+            allCategories.map(c => `<option value="${c}">${c}</option>`).join('');
+        } else {
+          currentUserType = null;
+          categorySelect.disabled = true;
+          categorySelect.innerHTML = '<option disabled selected value="">請先輸入有效的店家名稱</option>';
+          document.getElementById('itemsContainer').innerHTML = '';
+          document.getElementById('currentCategory').textContent = '當前類別：—';
+        }
+      });
+
+      categorySelect.addEventListener('change', () => {
+        const cat = categorySelect.value;
         if (!cat) return;
         loadItems(cat);
       });
@@ -316,12 +349,19 @@
         e.preventDefault();
         const arr = Object.values(pending);
         if (!arr.length) return alert('請至少選擇一個品項！');
+        
+        const name = nameInput.value.trim();
+        if (!allCustomers.hasOwnProperty(name)) {
+            alert('店家名稱無效，無法提交訂單！');
+            return;
+        }
         showConfirmModal(arr);
       });
 
       document.querySelector('.btn-cancel').addEventListener('click', () => {
         document.getElementById('confirmModal').classList.remove('active');
       });
+
       document.querySelector('.btn-confirm').addEventListener('click', async () => {
         const arr = Object.values(pending);
         const btn = document.querySelector('.btn-confirm');
@@ -335,11 +375,20 @@
             orders: JSON.stringify(arr)
           });
           if (res.error) throw new Error(res.error);
-          alert(`訂單完成！總金額：${res.total} 元`);
+
+          if (currentUserType === '連鎖店家') {
+            alert(`訂單完成！總金額：${res.total} 元`);
+          } else {
+            alert('感謝您的訂單！');
+          }
+
           document.getElementById('orderForm').reset();
           document.getElementById('itemsContainer').innerHTML = '';
-          current.textContent = '當前類別：—';
+          document.getElementById('currentCategory').textContent = '當前類別：—';
+          categorySelect.innerHTML = '<option disabled selected value="">請先輸入有效的店家名稱</option>';
+          categorySelect.disabled = true;
           for (let k in pending) delete pending[k];
+          currentUserType = null;
         } catch (err) {
           alert('送出失敗：' + err.message);
         } finally {
@@ -368,15 +417,22 @@
         const div = document.createElement('div');
         div.className = 'item-option';
         const exist = pending[o.item] || { qty: 0 };
+        
+        let priceDisplay = '';
+        if (currentUserType === '連鎖店家') {
+          priceDisplay = `<br><span class="item-price">NT$ ${o.price}</span>`;
+        }
+        
         div.innerHTML = `
           <input type="checkbox" ${exist.qty > 0 ? 'checked' : ''} data-price="${o.price}" value="${o.item}">
-          <div class="item-label">${o.item}<br>NT$ ${o.price}</div>
+          <div class="item-label">${o.item}${priceDisplay}</div>
           <div class="qty-control">
             <button type="button" class="qty-minus">−</button>
             <input type="number" min="0" value="${exist.qty}">
             <button type="button" class="qty-plus">＋</button>
           </div>
         `;
+
         const cb = div.querySelector('input[type="checkbox"]');
         const qtyIn = div.querySelector('input[type="number"]');
         const btnM = div.querySelector('.qty-minus');
@@ -393,13 +449,10 @@
         btnP.addEventListener('click', () => update(qtyIn.value * 1 + 1));
         btnM.addEventListener('click', () => update(qtyIn.value * 1 - 1));
         qtyIn.addEventListener('input', () => update(qtyIn.value));
-
-        // 修正：勾選固定設 qty = 1，取消設 qty = 0
         cb.addEventListener('click', e => {
           e.stopPropagation();
           update(cb.checked ? 1 : 0);
         });
-
         div.addEventListener('click', e => {
           if ([btnM, btnP, qtyIn, cb].includes(e.target)) return;
           update(cb.checked ? 0 : 1);
@@ -412,11 +465,16 @@
       const list = document.getElementById('confirmList');
       list.innerHTML = '';
       arr.forEach(o => {
+        let priceInfo = '';
+        if (currentUserType === '連鎖店家') {
+          priceInfo = ` (NT$ ${o.price})`;
+        }
         const row = document.createElement('div');
         row.className = 'confirm-item';
-        row.innerHTML = `<span>${o.item} x ${o.qty}</span><button class="remove-btn">🗑️</button>`;
+        row.innerHTML = `<span>${o.item}${priceInfo} x ${o.qty}</span><button class="remove-btn">🗑️</button>`;
         row.querySelector('.remove-btn').addEventListener('click', () => {
           delete pending[o.item];
+          loadItems(document.getElementById('category').value); 
           showConfirmModal(Object.values(pending));
         });
         list.appendChild(row);
