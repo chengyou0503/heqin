@@ -40,7 +40,7 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwGZO6hFnMkufOYBjbg5_ft0g9oSfX3aAefIhcIU62ng3yp1d8j-swlFgnneNe9Q71DYg/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzay8qYMxLdplRq0kQAiurrgA1CFX1JklUebKwCs_pl6Z2oA-uT3Keon9fuL_BgVGUvRA/exec';
     const pending = {};
 
     let allCustomers = {};
@@ -158,7 +158,6 @@
       container.innerHTML = '<div class="loading">載入中…</div>';
       let items;
       try {
-        // API 現在會回傳 item, unit, price
         items = await jsonp({ action: 'getItemsWithPrice', cat });
       } catch (e) {
         alert('載入品項失敗：' + e.message);
@@ -176,7 +175,6 @@
           priceDisplay = `<br><span class="item-price">NT$ ${o.price}</span>`;
         }
         
-        // 修改：顯示品項與單位
         const unitText = o.unit ? ` / ${o.unit}` : '';
         div.innerHTML = `
           <input type="checkbox" ${exist.qty > 0 ? 'checked' : ''} value="${o.item}">
@@ -198,7 +196,6 @@
           qtyIn.value = v;
           cb.checked = v > 0;
           if (v > 0) {
-            // 修改：儲存訂單時，一併存入單位
             pending[o.item] = { item: o.item, unit: o.unit, price: o.price, qty: v };
           } else {
             delete pending[o.item];
@@ -225,7 +222,6 @@
         if (currentUserType === '連鎖店家') {
           priceInfo = ` (NT$ ${o.price})`;
         }
-        // 修改：在確認視窗中也顯示單位
         const unitText = o.unit ? ` / ${o.unit}` : '';
         const row = document.createElement('div');
         row.className = 'confirm-item';
