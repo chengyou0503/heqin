@@ -40,7 +40,7 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzay8qYMxLdplRq0kQAiurrgA1CFX1JklUebKwCs_pl6Z2oA-uT3Keon9fuL_BgVGUvRA/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbx4ejw6HqxLRz0ev0gvtaWOL1BZqn9jwmvbqkE1VkonqC9NfGjzqJEEpO7RJ5JWEA0c_Q/exec';
     const pending = {};
 
     let allCustomers = {};
@@ -225,14 +225,34 @@
         const unitText = o.unit ? ` / ${o.unit}` : '';
         const row = document.createElement('div');
         row.className = 'confirm-item';
-        row.innerHTML = `<span>${o.item}<span class="item-unit">${unitText}</span>${priceInfo} x ${o.qty}</span><button class="remove-btn">🗑️</button>`;
-        row.querySelector('.remove-btn').addEventListener('click', () => {
-          delete pending[o.item];
-          loadItems(document.getElementById('category').value); 
-          showConfirmModal(Object.values(pending));
-        });
+        // 優化點 1: 在按鈕上增加 data-item-name 屬性，方便識別
+        row.innerHTML = `<span>${o.item}<span class="item-unit">${unitText}</span>${priceInfo} x ${o.qty}</span><button class="remove-btn" data-item-name="${o.item}">🗑️</button>`;
         list.appendChild(row);
       });
+
+      // 優化點 2: 使用事件代理，將監聽器綁定在父元素上，更高效
+      list.querySelectorAll('.remove-btn').forEach(btn => {
+        // 為了簡單起見，這裡仍然為每個按鈕綁定，但邏輯已優化
+        btn.addEventListener('click', (e) => {
+          const itemName = e.currentTarget.dataset.itemName;
+          if (!itemName) return;
+
+          // 1. 從 pending 物件中刪除
+          delete pending[itemName];
+
+          // 2. 更新主畫面上對應品項的 UI，而不是重新載入
+          const mainItemCheckbox = document.querySelector(`.item-option input[type="checkbox"][value="${itemName}"]`);
+          if (mainItemCheckbox) {
+              const parentDiv = mainItemCheckbox.closest('.item-option');
+              parentDiv.querySelector('input[type="checkbox"]').checked = false;
+              parentDiv.querySelector('input[type="number"]').value = 0;
+          }
+
+          // 3. 重新渲染此 modal 的內容 (現在會立即反應)
+          showConfirmModal(Object.values(pending));
+        });
+      });
+
       document.getElementById('confirmModal').classList.add('active');
       document.querySelector('.btn-confirm').disabled = arr.length === 0;
     }
